@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "workspaces": [
-    "packages/baby-gpt-app-cdk",
-    "packages/baby-gpt-app-website"
+    "packages/baby-gpt-cdk",
+    "packages/baby-gpt-website"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

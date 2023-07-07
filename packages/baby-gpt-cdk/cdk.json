@@ -1,5 +1,5 @@
 {
-  "app": "npx ts-node --prefer-ts-exts bin/baby-gpt-app-cdk.ts",
+  "app": "npx ts-node --prefer-ts-exts bin/baby-gpt-cdk.ts",
   "watch": {
     "include": [
       "**"
