@@ -2,7 +2,7 @@
   "name": "baby-gpt-cdk",
   "version": "0.1.0",
   "bin": {
-    "baby-gpt-cdk": "bin/baby-gpt-cdk.js"
+    "baby-gpt-cdk": "bin/baby-gpt-cdk.ts"
   },
   "scripts": {
     "build": "tsc",

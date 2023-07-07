@@ -1,12 +1,19 @@
-import * as cdk from 'aws-cdk-lib';
-import { Certificate, CertificateValidation } from 'aws-cdk-lib/aws-certificatemanager';
-import { OriginAccessIdentity, CloudFrontWebDistribution, ViewerCertificate, SecurityPolicyProtocol } from 'aws-cdk-lib/aws-cloudfront';
-import { Source } from 'aws-cdk-lib/aws-codebuild';
-import { ARecord, HostedZone, RecordTarget } from 'aws-cdk-lib/aws-route53';
-import { CloudFrontTarget } from 'aws-cdk-lib/aws-route53-targets';
-import { Bucket } from 'aws-cdk-lib/aws-s3';
-import { BucketDeployment } from 'aws-cdk-lib/aws-s3-deployment';
-import { Construct } from 'constructs';
+import * as cdk from "aws-cdk-lib";
+import {
+  Certificate,
+  CertificateValidation,
+} from "aws-cdk-lib/aws-certificatemanager";
+import {
+  OriginAccessIdentity,
+  CloudFrontWebDistribution,
+  ViewerCertificate,
+  SecurityPolicyProtocol,
+} from "aws-cdk-lib/aws-cloudfront";
+import { ARecord, HostedZone, RecordTarget } from "aws-cdk-lib/aws-route53";
+import { CloudFrontTarget } from "aws-cdk-lib/aws-route53-targets";
+import { Bucket } from "aws-cdk-lib/aws-s3";
+import { Source, BucketDeployment } from "aws-cdk-lib/aws-s3-deployment";
+import { Construct } from "constructs";
 
 export class BabyGptWebsiteStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -17,11 +24,11 @@ export class BabyGptWebsiteStack extends cdk.Stack {
       websiteIndexDocument: "index.html",
     });
 
-    // new BucketDeployment(this, "DeployWebsite", {
-    //   sources: [Source.asset("./build")],
-    //   destinationBucket: websiteBucket,
-    //   memoryLimit: 512,
-    // });
+    new BucketDeployment(this, "DeployWebsite", {
+      sources: [Source.asset("../baby-gpt-website/build")],
+      destinationBucket: websiteBucket,
+      memoryLimit: 512,
+    });
 
     // Create a Route53 DNS record to map the domain to the CloudFront distribution
     const domainName = "babygpt.xzhou.dev";

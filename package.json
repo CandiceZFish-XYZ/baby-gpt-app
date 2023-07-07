@@ -2,7 +2,7 @@
   "name": "baby-gpt-app",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "workspaces": [
     "packages/baby-gpt-cdk",
     "packages/baby-gpt-website"
