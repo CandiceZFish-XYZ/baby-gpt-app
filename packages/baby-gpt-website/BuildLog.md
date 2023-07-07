@@ -41,4 +41,7 @@ New Tasks
 
 - Reselecting same role do not refresh keywords
 - 3 API async functions! (Role, keyword, answer)
-- keyword selection & hide QA until keyword selected
+
+### 0707
+
+- FIX & refactor role selection & show hide keywords section

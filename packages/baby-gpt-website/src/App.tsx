@@ -7,6 +7,7 @@ import { GetDelay, MockRole, MockKeywords, MockQns } from "./utility/MockAPI";
 
 const ROLES = ["Founder", "CTO", "Builder", "CFO"];
 
+// data & loading for next section!
 type ApiResult<T> = {
   data: T | undefined;
   loading: boolean;
@@ -14,37 +15,27 @@ type ApiResult<T> = {
 };
 
 export default function App() {
-  const [role, setRole] = useState<ApiResult<string>>({
-    data: undefined,
-    loading: false,
-    error: undefined,
-  });
   const [selectedRole, setSelectedRole] = useState<string | undefined>(
     undefined
   );
 
-  const onRoleClick = async (r: string): Promise<void> => {
-    if (!role.data || (selectedRole && r !== selectedRole) || role.data !== r) {
-      setRole((prev) => ({ ...prev, loading: true }));
-      await callMockAPI(MockRole);
-      // where is error??
-      setRole((prev) => ({
-        ...prev,
-        data: r,
-        loading: false,
-        error: undefined,
-      }));
-      setSelectedRole(r);
-      return;
-    }
+  const [toggleKeywords, setToggleKeywords] = useState<boolean | undefined>(
+    undefined
+  );
 
-    //toggle
-    if (selectedRole) {
-      setSelectedRole(undefined);
-    } else {
-      setSelectedRole(r);
-    }
-  };
+  const [keywords, setKeywords] = useState<ApiResult<string[]>>({
+    data: undefined,
+    loading: false,
+    error: undefined,
+  });
+
+  const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
+
+  const [qa, setQa] = useState<ApiResult<string[]>>({
+    data: undefined,
+    loading: false,
+    error: undefined,
+  });
 
   const callMockAPI = async (func: Function) => {
     let delay = GetDelay();
@@ -54,32 +45,48 @@ export default function App() {
     return res;
   };
 
-  const [keywords, setKeywords] = useState<ApiResult<string[]>>({
-    data: undefined,
-    loading: false,
-    error: undefined,
-  });
-  const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
+  const onRoleClick = async (r: string): Promise<void> => {
+    if (!selectedRole || r !== selectedRole) {
+      setSelectedRole(r);
+      setToggleKeywords(true);
+      return;
+    }
 
-  const [qa, setQa] = useState<ApiResult<string[]>>({
-    data: undefined,
-    loading: false,
-    error: undefined,
-  });
+    //toggle
+    if (!toggleKeywords) {
+      setToggleKeywords(true);
+    } else {
+      setToggleKeywords((prev) => !prev);
+    }
+  };
+
+  const fetchKeywords = async () => {
+    try {
+      const kwords = await callMockAPI(MockKeywords);
+      setKeywords({
+        data: kwords,
+        loading: false,
+        error: undefined,
+      });
+    } catch (err) {
+      setKeywords({
+        data: undefined,
+        loading: false,
+        error: err,
+      });
+      console.error("API Error:", err);
+    }
+  };
 
   useEffect(() => {
-    const fetchKeywords = async () => {
-      try {
-        const kwords = await callMockAPI(MockKeywords);
-        setKeywords(kwords);
-      } catch (error) {
-        console.error("API Error:", error);
-      }
-    };
+    if (selectedRole === undefined) {
+      return;
+    }
+
     // reset keywords and questions
     setKeywords({
       data: undefined,
-      loading: false,
+      loading: true,
       error: undefined,
     });
     setQa({
@@ -87,8 +94,6 @@ export default function App() {
       loading: false,
       error: undefined,
     });
-    // 1. const keywords = await getKeywords(role)
-    // 2. setKeywords(keywords)
     fetchKeywords();
   }, [selectedRole]);
 
@@ -111,8 +116,8 @@ export default function App() {
             </button>
           ))}
         </section>
-        {role.loading && <Loading />}
-        {!role.loading && selectedRole && role.data && (
+        {keywords.loading && <Loading section="keywords" />}
+        {selectedRole && toggleKeywords && keywords.data && (
           <Keywords role={selectedRole} keywords={keywords} />
         )}
         {/* <TopQns /> */}
@@ -121,6 +126,6 @@ export default function App() {
   );
 }
 
-const Loading = () => {
-  return <p>Loading...(takes 1-4 s)</p>;
+const Loading = ({ section }) => {
+  return <p>Loading for seciton {section}...(takes 1-4 s)</p>;
 };

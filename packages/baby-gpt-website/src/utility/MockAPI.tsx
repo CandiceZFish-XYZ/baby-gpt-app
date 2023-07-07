@@ -14,8 +14,15 @@ export const MockRole = (delay: number): Promise<void> => {
 export const MockKeywords = (delay: number): Promise<string[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const kwords: string[] = ["keyword1", "keyword2", "key3"];
-      resolve(kwords);
+      const kwords: string[] = [
+        "keyword1",
+        "keyword2",
+        "key3",
+        "k4",
+        "k55",
+        "k6.k",
+      ];
+      resolve(kwords.slice(0, delay));
       console.log("Mock Keywords API");
     }, delay * 1000);
   });
