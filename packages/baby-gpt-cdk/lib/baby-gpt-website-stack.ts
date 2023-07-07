@@ -8,6 +8,9 @@ import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { BucketDeployment } from 'aws-cdk-lib/aws-s3-deployment';
 import { Construct } from 'constructs';
 
+const ROOT_DOMAIN = "xzhou.dev";
+const APP_NAME = "babygpt";
+
 export class BabyGptWebsiteStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -24,9 +27,9 @@ export class BabyGptWebsiteStack extends cdk.Stack {
     // });
 
     // Create a Route53 DNS record to map the domain to the CloudFront distribution
-    const domainName = "babygpt.xzhou.dev";
+    const domainName = `${APP_NAME}.${ROOT_DOMAIN}`;
     const hostedZone = HostedZone.fromLookup(this, "HostedZone", {
-      domainName: "xzhou.dev",
+      domainName: ROOT_DOMAIN,
     });
 
     // Create a HTTPS certificate
@@ -75,6 +78,7 @@ export class BabyGptWebsiteStack extends cdk.Stack {
     // A record
     const aliasRecord = new ARecord(this, "WebsiteAliasRecord", {
       zone: hostedZone,
+      recordName: APP_NAME,
       target: RecordTarget.fromAlias(new CloudFrontTarget(distribution)),
     });
   }
