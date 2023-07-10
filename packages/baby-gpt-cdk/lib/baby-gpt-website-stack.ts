@@ -14,12 +14,17 @@ import { CloudFrontTarget } from "aws-cdk-lib/aws-route53-targets";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { Source, BucketDeployment } from "aws-cdk-lib/aws-s3-deployment";
 import { Construct } from "constructs";
+import { BabyGptApiStack } from "./baby-gpt-api-stack";
 
 const ROOT_DOMAIN = "xzhou.dev";
 const APP_NAME = "babygpt";
 
+interface BabyGptWebsiteStackProps extends cdk.StackProps {
+  apiStack: BabyGptApiStack,
+}
+
 export class BabyGptWebsiteStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props: BabyGptWebsiteStackProps) {
     super(scope, id, props);
 
     // Create an S3 bucket to host the website content
@@ -66,6 +71,16 @@ export class BabyGptWebsiteStack extends cdk.Stack {
               },
             ],
           },
+          {
+            customOriginSource: {
+              domainName: `${props.apiStack.api.restApiId}.execute-api.${this.region}.amazonaws.com`,
+            },
+            behaviors: [
+              {
+                pathPattern: '/api/*'
+              }
+            ]
+          }
         ],
         errorConfigurations: [
           {

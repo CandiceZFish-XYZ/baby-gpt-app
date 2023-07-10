@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.ts",
   "workspaces": [
+    "packages/baby-gpt-api",
     "packages/baby-gpt-cdk",
     "packages/baby-gpt-website"
   ],

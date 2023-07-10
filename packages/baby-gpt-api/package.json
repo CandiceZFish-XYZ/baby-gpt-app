@@ -1,0 +1,22 @@
+{
+  "name": "baby-gpt-api",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CandiceZFish-XYZ/baby-gpt-app.git"
+  },
+  "author": "CZ & QC",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CandiceZFish-XYZ/baby-gpt-app/issues"
+  },
+  "homepage": "https://github.com/CandiceZFish-XYZ/baby-gpt-app#readme",
+  "devDependencies": {
+    "aws-lambda": "^1.0.7"
+  }
+}
