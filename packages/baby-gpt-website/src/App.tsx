@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from "react";
 
 import Keywords from "./components/Keywords";
-import TopQns from "./components/TopQns";
+import TopQAs from "./components/TopQAs";
 
-import { GetDelay, MockRole, MockKeywords, MockQns } from "./utility/MockAPI";
+import { GetDelay, MockKeywords, MockQAs } from "./utility/MockAPI";
 
-const ROLES = ["Founder", "CTO", "Builder", "CFO"];
+const ROLES = [
+  "Dad",
+  "Mom",
+  "Grandma",
+  "Grandpa",
+  "Big sister",
+  "Big brother",
+  "Younger sister",
+  "Younger brother",
+  "Care-giver",
+  "Teacher (educational)",
+];
+// more:  "Great Grandma", "Great Grandpa", "Uncle", "Auntie"
 
 // data & loading for next section!
 type ApiResult<T> = {
@@ -31,7 +43,7 @@ export default function App() {
 
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
 
-  const [qa, setQa] = useState<ApiResult<string[]>>({
+  const [qas, setQas] = useState<ApiResult<string[]>>({
     data: undefined,
     loading: false,
     error: undefined,
@@ -49,6 +61,17 @@ export default function App() {
     if (!selectedRole || r !== selectedRole) {
       setSelectedRole(r);
       setToggleKeywords(true);
+      // reset keywords and QAS
+      setKeywords({
+        data: undefined,
+        loading: true,
+        error: undefined,
+      });
+      setQas({
+        data: undefined,
+        loading: false,
+        error: undefined,
+      });
       return;
     }
 
@@ -62,9 +85,9 @@ export default function App() {
 
   const fetchKeywords = async () => {
     try {
-      const kwords = await callMockAPI(MockKeywords);
+      const res = await callMockAPI(MockKeywords);
       setKeywords({
-        data: kwords,
+        data: res,
         loading: false,
         error: undefined,
       });
@@ -74,7 +97,7 @@ export default function App() {
         loading: false,
         error: err,
       });
-      console.error("API Error:", err);
+      console.error("Keywords API Error:", err);
     }
   };
 
@@ -83,19 +106,44 @@ export default function App() {
       return;
     }
 
-    // reset keywords and questions
-    setKeywords({
+    fetchKeywords();
+  }, [selectedRole]);
+
+  const onKeywordClick = (kword) => {
+    if (!selectedKeywords.includes(kword)) {
+      setSelectedKeywords((prev) => [...prev, kword]);
+      console.log("Selected keyword: ", kword);
+    } else {
+      setSelectedKeywords((prev) => prev.filter((word) => word !== kword));
+      console.log("Un-selected keyword: ", kword);
+    }
+  };
+
+  const fetchQAs = async () => {
+    //reset
+    setQas({
       data: undefined,
       loading: true,
       error: undefined,
     });
-    setQa({
-      data: undefined,
-      loading: false,
-      error: undefined,
-    });
-    fetchKeywords();
-  }, [selectedRole]);
+
+    //fetch
+    try {
+      const res = await callMockAPI(MockQAs);
+      setQas({
+        data: res,
+        loading: false,
+        error: undefined,
+      });
+    } catch (err) {
+      setQas({
+        data: undefined,
+        loading: false,
+        error: err,
+      });
+      console.error("QA API Error:", err);
+    }
+  };
 
   return (
     <div className="m-5">
@@ -104,7 +152,7 @@ export default function App() {
       </header>
       <main>
         <section className="my-5">
-          <h2>Choose one role to begin</h2>
+          <h2>Choose your role to begin</h2>
           {ROLES.map((r, index) => (
             <button
               key={index}
@@ -116,11 +164,24 @@ export default function App() {
             </button>
           ))}
         </section>
-        {keywords.loading && <Loading section="keywords" />}
-        {selectedRole && toggleKeywords && keywords.data && (
-          <Keywords role={selectedRole} keywords={keywords} />
-        )}
-        {/* <TopQns /> */}
+        <section>
+          {keywords.loading && <Loading section="keywords" />}
+          {selectedRole && toggleKeywords && keywords.data && (
+            <Keywords
+              role={selectedRole}
+              keywords={keywords}
+              selectedKeywords={selectedKeywords}
+              onKeywordClick={onKeywordClick}
+              fetchQAs={fetchQAs}
+            />
+          )}
+        </section>
+        <section>
+          {qas.loading && <Loading section="QAs" />}
+          {selectedKeywords.length > 0 && qas.data && (
+            <TopQAs qaList={qas.data} />
+          )}
+        </section>
       </main>
     </div>
   );

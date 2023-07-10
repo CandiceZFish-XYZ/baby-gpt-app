@@ -45,3 +45,13 @@ New Tasks
 ### 0707
 
 - FIX & refactor role selection & show hide keywords section
+
+TODO
+
+- expand qns + loading state + call API
+- Center role & keywords section
+- keyword 换行
+
+### 0710
+
+- expand qns + loading state + call API
