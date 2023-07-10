@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 
+import AgeGroup from "./components/AgeGroup";
 import Keywords from "./components/Keywords";
 import TopQAs from "./components/TopQAs";
 
@@ -19,6 +20,17 @@ const ROLES = [
 ];
 // more:  "Great Grandma", "Great Grandpa", "Uncle", "Auntie"
 
+const AG: string[] = [
+  "newborn",
+  "3 m - 1 yr",
+  "1 yr - 3 yr",
+  "3 yr - 5 yr",
+  "5 yr - 12 yr",
+  "12 yr - 14 yr",
+  "14 yr - 16 yr",
+  "16 yr - 18 yr",
+];
+
 // data & loading for next section!
 type ApiResult<T> = {
   data: T | undefined;
@@ -31,16 +43,21 @@ export default function App() {
     undefined
   );
 
-  const [toggleKeywords, setToggleKeywords] = useState<boolean | undefined>(
+  const [toggleAgeGroup, setToggleAgeGroup] = useState<boolean | undefined>(
+    undefined
+  );
+  const [selectedAgeGroup, setSelectedAgeGroup] = useState<string | undefined>(
     undefined
   );
 
+  const [toggleKeywords, setToggleKeywords] = useState<boolean | undefined>(
+    undefined
+  );
   const [keywords, setKeywords] = useState<ApiResult<string[]>>({
     data: undefined,
     loading: false,
     error: undefined,
   });
-
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
 
   const [qas, setQas] = useState<ApiResult<string[]>>({
@@ -57,16 +74,45 @@ export default function App() {
     return res;
   };
 
-  const onRoleClick = async (r: string): Promise<void> => {
+  const onRoleClick = (r: string): void => {
     if (!selectedRole || r !== selectedRole) {
       setSelectedRole(r);
+      setToggleAgeGroup(true);
+      // reset rest
+      setSelectedAgeGroup(undefined);
+      setKeywords({
+        data: undefined,
+        loading: false,
+        error: undefined,
+      });
+      setSelectedKeywords([]);
+      setQas({
+        data: undefined,
+        loading: false,
+        error: undefined,
+      });
+      return;
+    }
+
+    //toggle
+    if (!toggleAgeGroup) {
+      setToggleAgeGroup(true);
+    } else {
+      setToggleAgeGroup((prev) => !prev);
+    }
+  };
+
+  const onAgeGroupClick = (ag: string): void => {
+    if (!selectedAgeGroup || ag !== selectedAgeGroup) {
+      setSelectedAgeGroup(ag);
       setToggleKeywords(true);
-      // reset keywords and QAS
+      // reset rest
       setKeywords({
         data: undefined,
         loading: true,
         error: undefined,
       });
+      setSelectedKeywords([]);
       setQas({
         data: undefined,
         loading: false,
@@ -102,12 +148,12 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (selectedRole === undefined) {
+    if (selectedAgeGroup === undefined) {
       return;
     }
 
     fetchKeywords();
-  }, [selectedRole]);
+  }, [selectedAgeGroup]);
 
   const onKeywordClick = (kword) => {
     if (!selectedKeywords.includes(kword)) {
@@ -153,22 +199,39 @@ export default function App() {
       <main>
         <section className="my-5">
           <h2>Choose your role to begin</h2>
-          {ROLES.map((r, index) => (
-            <button
-              key={index}
-              className="m-1 btn btn-primary"
-              type="button"
-              onClick={() => onRoleClick(r)}
-            >
-              {r}
-            </button>
-          ))}
+          {ROLES.map((r, index) => {
+            const isSelectedRole = selectedRole === r;
+            return (
+              <button
+                key={index}
+                className={
+                  isSelectedRole
+                    ? "m-1 btn btn-primary"
+                    : "m-1 btn btn-outline-primary"
+                }
+                type="button"
+                onClick={() => onRoleClick(r)}
+              >
+                {r}
+              </button>
+            );
+          })}
+        </section>
+        <section>
+          {selectedRole && toggleAgeGroup && (
+            <AgeGroup
+              ageGroups={AG}
+              selectedAgeGroup={selectedAgeGroup}
+              onAgeGroupClick={onAgeGroupClick}
+            />
+          )}
         </section>
         <section>
           {keywords.loading && <Loading section="keywords" />}
-          {selectedRole && toggleKeywords && keywords.data && (
+          {selectedAgeGroup && toggleKeywords && keywords.data && (
             <Keywords
               role={selectedRole}
+              selectedAgeGroup={selectedAgeGroup}
               keywords={keywords}
               selectedKeywords={selectedKeywords}
               onKeywordClick={onKeywordClick}

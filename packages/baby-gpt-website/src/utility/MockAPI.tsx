@@ -11,7 +11,13 @@ export const GetDelay = (): number => {
 //   });
 // };
 
-const KWORDS: string[] = ["keyword1", "keyword2", "key3", "k4", "k55", "k6.k"];
+const KWORDS: string[] = [
+  "Developmental milestones",
+  "Nutrition and feeding",
+  "Sleep patterns",
+  "Safety precautions",
+  "Social and emotional development",
+];
 
 export const MockKeywords = (delay: number): Promise<string[]> => {
   return new Promise((resolve) => {
@@ -24,28 +30,24 @@ export const MockKeywords = (delay: number): Promise<string[]> => {
 
 const QA = [
   {
-    qns: "Question 1 blablabla",
-    ans: "Ans 1 o style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also wort",
+    qns: "What are the typical developmental milestones for 1-2 year olds?",
+    ans: "Some typical developmental milestones for 1-2 year olds include walking independently, saying a few words, using simple gestures, imitating others, and exploring objects with curiosity.",
   },
   {
-    qns: "Question 2 blablabla",
-    ans: "Ans 2 oting that just about any HTML can go within the .accordion-body, though the transition does limi",
+    qns: "How much sleep do 1-2 year olds need?",
+    ans: "On average, 1-2 year olds need about 11-14 hours of sleep per day, including naps. This can vary for each child, but it is important to ensure they are getting enough rest for their growth and development.",
   },
   {
-    qns: "Question 3 blablabla",
-    ans: "Ans 3 blabhile the styling of badges provides a visual cue as to their purpose, these users will simply be presented with the content of the labla",
+    qns: "How can I encourage my 1-2 year old's language development?",
+    ans: "To encourage language development, you can talk to your child frequently, read books together, sing songs, and engage in simple conversations. Responding to their attempts at communication and using gestures can also help them learn and understand language.",
   },
   {
-    qns: "Question 4 blablabla",
-    ans: "Ans 4 o style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also wort",
+    qns: "What are some signs that my 1-2 year old is ready for potty training?",
+    ans: "Signs that your child may be ready for potty training include showing interest in the bathroom, staying dry for longer periods, being able to follow simple instructions, and showing discomfort with dirty diapers. However, every child is different, so it's important to be patient and wait for readiness cues.",
   },
   {
-    qns: "Question 5 blablabla",
-    ans: "Ans 5 oting that just about any HTML can go within the .accordion-body, though the transition does limi",
-  },
-  {
-    qns: "Question 6 blablabla",
-    ans: "Ans 6 blabhile the styling of badges provides a visual cue as to their purpose, these users will simply be presented with the content of the labla",
+    qns: "How can I promote healthy eating habits for my 1-2 year old?",
+    ans: "To promote healthy eating habits, offer a variety of nutritious foods, including fruits, vegetables, whole grains, and lean proteins. Allow your child to self-feed and explore different textures. Limit sugary snacks and drinks, and be a positive role model by eating healthy foods yourself.",
   },
 ];
 

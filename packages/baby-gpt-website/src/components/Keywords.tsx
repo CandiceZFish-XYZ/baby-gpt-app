@@ -2,6 +2,7 @@ import React from "react";
 
 export default function Keywords({
   role,
+  selectedAgeGroup,
   keywords,
   selectedKeywords,
   onKeywordClick,
@@ -9,7 +10,10 @@ export default function Keywords({
 }) {
   return (
     <section className="my-5">
-      <p>Pick top 3 keyword for consideration as a {role}</p>
+      <p>
+        Pick top 3 keyword for consideration as a {role} for age{" "}
+        {selectedAgeGroup}
+      </p>
       <div>
         {keywords.data.map((kword: string, index: number) => {
           const isSelectedKword = selectedKeywords.includes(kword);
