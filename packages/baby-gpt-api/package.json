@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "dev": "tsc && node ./dist/local-run/index.js",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,6 +18,11 @@
   },
   "homepage": "https://github.com/CandiceZFish-XYZ/baby-gpt-app#readme",
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.119",
     "aws-lambda": "^1.0.7"
+  },
+  "dependencies": {
+    "openai": "^3.3.0",
+    "ts-node": "^10.9.1"
   }
 }

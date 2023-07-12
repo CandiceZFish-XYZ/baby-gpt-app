@@ -55,3 +55,23 @@ TODO
 ### 0710
 
 - expand qns + loading state + call API
+
+TODO
+
+- HIDE API keys in environment variable!
+- Center role & keywords section
+- keyword 换行
+- Responsive
+
+### 0712
+
+- `get-keywords` & `get-qas` handler function locally tested with API key
+- deployed to AWS but cannot access openai API
+
+TODO
+
+- ! Sync prettier & Eslint!
+- ! HIDE API keys in environment variable!
+- Center role & keywords section
+- keyword 换行
+- Responsive
