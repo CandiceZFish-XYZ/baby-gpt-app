@@ -8,6 +8,8 @@ import { GetDelay, MockKeywords, MockQAs } from "./utility/MockAPI";
 
 import { APIGatewayProxyEvent } from "aws-lambda";
 
+const DEV_API = "http://localhost:8081";
+
 const ROLES = [
   "Dad",
   "Mom",
@@ -195,15 +197,23 @@ export default function App() {
 
   const [testHelloWorld, setTestHelloWorld] = useState("NA");
   const [testKeywords, setTestKeywords] = useState(["NA"]);
-  const event = {
-    queryStringParameters: {
-      role: "Grandpa",
-      age: "[12, 25]",
-    },
-  } as unknown as APIGatewayProxyEvent;
-  const queryString = new URLSearchParams(
-    event.queryStringParameters
-  ).toString();
+
+  const queryStringParams = {
+    role: "mom",
+    age: [12, 25],
+  };
+
+  //     keywords: ["sleep", "play", "feeding"],
+
+  const queryString = Object.entries(queryStringParams)
+    .flatMap(([key, values]) =>
+      Array.isArray(values)
+        ? values.map(
+            (value) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+          )
+        : `${encodeURIComponent(key)}=${encodeURIComponent(values)}`
+    )
+    .join("&");
 
   return (
     <div className="m-5">
@@ -218,7 +228,9 @@ export default function App() {
               onClick={async () => {
                 console.log("Testing hello-world API...");
                 try {
-                  let res = await fetch("/api/hello-world");
+                  // let res = await fetch("/api/hello-world");
+                  let res = await fetch(DEV_API + "api/hello-world");
+
                   let jres = await res.json();
                   console.log(jres.message);
                   setTestHelloWorld(jres.message);
@@ -236,10 +248,12 @@ export default function App() {
               onClick={async () => {
                 console.log("Testing keywords API...");
                 try {
-                  let res = await fetch("/api/keywords?${queryString}");
+                  let res = await fetch(
+                    `${DEV_API}/api/keywords?${queryString}`
+                  );
                   let jres = await res.json();
                   console.log(jres.message);
-                  setTestKeywords(jres.message);
+                  setTestKeywords(jres.message.keywords);
                 } catch (e) {
                   console.log("Error: ", e);
                 }

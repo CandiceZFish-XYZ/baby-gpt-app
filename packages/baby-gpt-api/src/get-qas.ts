@@ -15,7 +15,7 @@ async function get_completion(prompt, model = "gpt-3.5-turbo") {
         content: prompt,
       },
     ],
-    temperature: 0,
+    temperature: 0.3,
   });
   return response.data.choices[0].message?.content;
 }
@@ -26,7 +26,7 @@ export const handler = async (
   console.log("EVENT: \n" + JSON.stringify(event, null, 2));
 
   const role = event.queryStringParameters?.["role"];
-  const age = event.queryStringParameters?.["age"];
+  const age = event.multiValueQueryStringParameters?.["age"];
   let age0 = Number(age?.[0]);
   let unit0 = "month";
   if (age0 >= 12) {
@@ -41,19 +41,20 @@ export const handler = async (
     unit1 = "year";
   }
 
-  const keywords = event.queryStringParameters?.["keywords"];
+  const keywords = event.multiValueQueryStringParameters?.["keywords"];
+  const keywordStr = keywords ? keywords.join(", ") : undefined;
 
   const prompt = `
     List five top questions that is concerned by a ${role} 
     during the childcare of ${age0} ${unit0} - ${age1} ${unit1} olds 
-    with these keywords ${keywords}.
+    with these keywords ${keywordStr}.
     Then provide a brief answer to each question in no more than 4 sentences.
     Format your response in a json list, label the question aas 'qns' and the answer as 'ans'.`;
 
   console.log(prompt);
 
   const response = await get_completion(prompt);
-  let jsonRes;
+  let jsonRes = prompt;
   if (typeof response === "string") {
     jsonRes = await JSON.parse(response);
   }

@@ -26,7 +26,7 @@ export const handler = async (
   console.log("EVENT: \n" + JSON.stringify(event, null, 2));
 
   const role = event.queryStringParameters?.["role"];
-  const age = event.queryStringParameters?.["age"];
+  const age = event.multiValueQueryStringParameters?.["age"];
   let age0 = Number(age?.[0]);
   let unit0 = "month";
   if (age0 >= 12) {
@@ -48,11 +48,11 @@ export const handler = async (
 
   console.log(prompt);
 
-  // const response = await get_completion(prompt);
-  let jsonRes = prompt;
-  // if (typeof response === "string") {
-  //   jsonRes = await JSON.parse(response);
-  // }
+  const response = await get_completion(prompt);
+  let jsonRes;
+  if (typeof response === "string") {
+    jsonRes = await JSON.parse(response);
+  }
 
   return {
     statusCode: 200,

@@ -79,3 +79,31 @@ TODO
 - Center role & keywords section
 - keyword 换行
 - Responsive
+
+### 0713
+
+Dev setup
+
+- set up proxy server, redirects localhost api call to deployed api gateway
+  - set up cors since local website & proxy are on different port
+  - don't use local server.js
+
+API handler func
+
+- updated API handler functions to receive multiValueQueryStringParameters
+- added longer time-out in cdk (needs more time to wait for gpt response)
+
+Front-end to API
+
+- keywords API called successfully by button clicks with parameters sent
+
+TODO
+
+- format received output for display
+- make query params coming from the buttons clicked
+- ! Add `try-catch` block to API handlers! (now not logging errors)
+- ! Sync prettier & Eslint!
+- ! HIDE API keys in environment variable!
+- Center role & keywords section
+- keyword 换行
+- Responsive
