@@ -6,6 +6,8 @@ import TopQAs from "./components/TopQAs";
 
 import { GetDelay, MockKeywords, MockQAs } from "./utility/MockAPI";
 
+import { APIGatewayProxyEvent } from "aws-lambda";
+
 const ROLES = [
   "Dad",
   "Mom",
@@ -191,12 +193,63 @@ export default function App() {
     }
   };
 
+  const [testHelloWorld, setTestHelloWorld] = useState("NA");
+  const [testKeywords, setTestKeywords] = useState(["NA"]);
+  const event = {
+    queryStringParameters: {
+      role: "Grandpa",
+      age: "[12, 25]",
+    },
+  } as unknown as APIGatewayProxyEvent;
+  const queryString = new URLSearchParams(
+    event.queryStringParameters
+  ).toString();
+
   return (
     <div className="m-5">
       <header>
         <h1>Welcome</h1>
       </header>
       <main>
+        <section>
+          <h2>Test API section</h2>
+          <div>
+            <button
+              onClick={async () => {
+                console.log("Testing hello-world API...");
+                try {
+                  let res = await fetch("/api/hello-world");
+                  let jres = await res.json();
+                  console.log(jres.message);
+                  setTestHelloWorld(jres.message);
+                } catch (e) {
+                  console.log("Error: ", e);
+                }
+              }}
+            >
+              Test hello-world
+            </button>
+            <p>{testHelloWorld}</p>
+          </div>
+          <div>
+            <button
+              onClick={async () => {
+                console.log("Testing keywords API...");
+                try {
+                  let res = await fetch("/api/keywords?${queryString}");
+                  let jres = await res.json();
+                  console.log(jres.message);
+                  setTestKeywords(jres.message);
+                } catch (e) {
+                  console.log("Error: ", e);
+                }
+              }}
+            >
+              Test keywords
+            </button>
+            <p>{testKeywords}</p>
+          </div>
+        </section>
         <section className="my-5">
           <h2>Choose your role to begin</h2>
           {ROLES.map((r, index) => {

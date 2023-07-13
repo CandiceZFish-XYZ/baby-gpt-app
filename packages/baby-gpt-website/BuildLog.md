@@ -68,6 +68,10 @@ TODO
 - `get-keywords` & `get-qas` handler function locally tested with API key
 - deployed to AWS but cannot access openai API
 
+- Connected API to front-end website
+  - openai callable
+  - query parameters not received correctly.
+
 TODO
 
 - ! Sync prettier & Eslint!

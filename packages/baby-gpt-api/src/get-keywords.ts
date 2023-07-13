@@ -48,11 +48,11 @@ export const handler = async (
 
   console.log(prompt);
 
-  const response = await get_completion(prompt);
-  let jsonRes;
-  if (typeof response === "string") {
-    jsonRes = await JSON.parse(response);
-  }
+  // const response = await get_completion(prompt);
+  let jsonRes = prompt;
+  // if (typeof response === "string") {
+  //   jsonRes = await JSON.parse(response);
+  // }
 
   return {
     statusCode: 200,
