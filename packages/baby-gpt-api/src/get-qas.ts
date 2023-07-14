@@ -49,11 +49,12 @@ export const handler = async (
     during the childcare of ${age0} ${unit0} - ${age1} ${unit1} olds 
     with these keywords ${keywordStr}.
     Then provide a brief answer to each question in no more than 4 sentences.
-    Format your response in a json list, label the question aas 'qns' and the answer as 'ans'.`;
-
-  console.log(prompt);
+    Format your response in a json list, label the question aas 'question' and the answer as 'answer'.`;
+  console.log("prompt", prompt);
 
   const response = await get_completion(prompt);
+  console.log("response", response);
+
   let jsonRes = prompt;
   if (typeof response === "string") {
     jsonRes = await JSON.parse(response);
@@ -61,8 +62,6 @@ export const handler = async (
 
   return {
     statusCode: 200,
-    body: JSON.stringify({
-      message: jsonRes,
-    }),
+    body: JSON.stringify(jsonRes),
   };
 };

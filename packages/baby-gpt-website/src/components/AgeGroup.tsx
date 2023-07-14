@@ -9,8 +9,8 @@ export default function AgeGroup({
     <section className="my-5">
       <p>Choose the age group of your child</p>
       <div>
-        {ageGroups.map((ag: string, index: number) => {
-          const isSelectedAG = selectedAgeGroup === ag;
+        {ageGroups.map((ag, index: number) => {
+          const isSelectedAG = selectedAgeGroup === ag.id;
           return (
             <label
               key={index}
@@ -20,10 +20,10 @@ export default function AgeGroup({
                   : "m-1 btn btn-outline-primary"
               }
               onClick={() => {
-                onAgeGroupClick(ag);
+                onAgeGroupClick(ag.id);
               }}
             >
-              {ag}
+              {ag.label}
             </label>
           );
         })}

@@ -3,6 +3,7 @@ import React from "react";
 export default function Keywords({
   role,
   selectedAgeGroup,
+  ageGroups,
   keywords,
   selectedKeywords,
   onKeywordClick,
@@ -12,7 +13,7 @@ export default function Keywords({
     <section className="my-5">
       <p>
         Pick top 3 keyword for consideration as a {role} for age{" "}
-        {selectedAgeGroup}
+        {ageGroups[selectedAgeGroup].label}
       </p>
       <div>
         {keywords.data.map((kword: string, index: number) => {

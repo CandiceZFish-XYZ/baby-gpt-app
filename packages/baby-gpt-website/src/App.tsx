@@ -3,10 +3,7 @@ import React, { useState, useEffect } from "react";
 import AgeGroup from "./components/AgeGroup";
 import Keywords from "./components/Keywords";
 import TopQAs from "./components/TopQAs";
-
-import { GetDelay, MockKeywords, MockQAs } from "./utility/MockAPI";
-
-import { APIGatewayProxyEvent } from "aws-lambda";
+import { getQuestions } from "./api/get-qas";
 
 const DEV_API = "http://localhost:8081";
 
@@ -24,15 +21,32 @@ const ROLES = [
 ];
 // more:  "Great Grandma", "Great Grandpa", "Uncle", "Auntie"
 
-const AG: string[] = [
-  "newborn",
-  "3 m - 1 yr",
-  "1 yr - 3 yr",
-  "3 yr - 5 yr",
-  "5 yr - 12 yr",
-  "12 yr - 14 yr",
-  "14 yr - 16 yr",
-  "16 yr - 18 yr",
+type AgeRange = {
+  id: number;
+  label: string;
+  fromAge: number;
+  toAge: number;
+};
+
+// const AG: string[] = [
+//   "newborn",
+//   "3 m - 1 yr",
+//   "1 yr - 3 yr",
+//   "3 yr - 5 yr",
+//   "5 yr - 12 yr",
+//   "12 yr - 14 yr",
+//   "14 yr - 16 yr",
+//   "16 yr - 18 yr",];
+
+const ageGroups: AgeRange[] = [
+  { id: 0, label: "newborn", fromAge: 0, toAge: 3 },
+  { id: 1, label: "3 m - 1 yr", fromAge: 3, toAge: 12 },
+  { id: 2, label: "1 yr - 3 yr", fromAge: 12, toAge: 36 },
+  { id: 3, label: "3 yr - 5 yr", fromAge: 36, toAge: 60 },
+  { id: 4, label: "5 yr - 12 yr", fromAge: 60, toAge: 144 },
+  { id: 5, label: "12 yr - 14 yr", fromAge: 144, toAge: 168 },
+  { id: 6, label: "14 yr - 16 yr", fromAge: 168, toAge: 192 },
+  { id: 7, label: "16 yr - 18 yr", fromAge: 192, toAge: 216 },
 ];
 
 // data & loading for next section!
@@ -50,7 +64,7 @@ export default function App() {
   const [toggleAgeGroup, setToggleAgeGroup] = useState<boolean | undefined>(
     undefined
   );
-  const [selectedAgeGroup, setSelectedAgeGroup] = useState<string | undefined>(
+  const [selectedAgeGroup, setSelectedAgeGroup] = useState<number | undefined>(
     undefined
   );
 
@@ -69,14 +83,6 @@ export default function App() {
     loading: false,
     error: undefined,
   });
-
-  const callMockAPI = async (func: Function) => {
-    let delay = GetDelay();
-    console.log("Loading...takes 1-4s");
-    const res = await func(delay);
-    console.log("Data loaded in ", delay, "s.");
-    return res;
-  };
 
   const onRoleClick = (r: string): void => {
     if (!selectedRole || r !== selectedRole) {
@@ -106,7 +112,7 @@ export default function App() {
     }
   };
 
-  const onAgeGroupClick = (ag: string): void => {
+  const onAgeGroupClick = (ag: number): void => {
     if (!selectedAgeGroup || ag !== selectedAgeGroup) {
       setSelectedAgeGroup(ag);
       setToggleKeywords(true);
@@ -134,10 +140,23 @@ export default function App() {
   };
 
   const fetchKeywords = async () => {
+    console.log("Calling keywords API...");
+
+    const queryStringParams = {
+      role: selectedRole,
+      age: [
+        ageGroups[selectedAgeGroup].fromAge,
+        ageGroups[selectedAgeGroup].toAge,
+      ],
+    };
+    const queryString = formatQueryString(queryStringParams);
     try {
-      const res = await callMockAPI(MockKeywords);
+      let res = await fetch(`${DEV_API}/api/keywords?${queryString}`);
+      let jres = await res.json();
+      let jk = jres.message.keywords;
+      console.log(jk);
       setKeywords({
-        data: res,
+        data: jk,
         loading: false,
         error: undefined,
       });
@@ -147,7 +166,7 @@ export default function App() {
         loading: false,
         error: err,
       });
-      console.error("Keywords API Error:", err);
+      console.log("Keywords API Error: ", err);
     }
   };
 
@@ -170,6 +189,8 @@ export default function App() {
   };
 
   const fetchQAs = async () => {
+    console.log("Calling QA API...");
+
     //reset
     setQas({
       data: undefined,
@@ -177,43 +198,47 @@ export default function App() {
       error: undefined,
     });
 
-    //fetch
     try {
-      const res = await callMockAPI(MockQAs);
+      const questions = await getQuestions({
+        role: selectedRole,
+        age: [
+          ageGroups[selectedAgeGroup].fromAge,
+          ageGroups[selectedAgeGroup].toAge,
+        ],
+        keywords: selectedKeywords,
+      });
+
+      console.log(questions);
+
       setQas({
-        data: res,
+        data: questions,
         loading: false,
         error: undefined,
       });
-    } catch (err) {
+    } catch (error) {
       setQas({
         data: undefined,
         loading: false,
-        error: err,
+        error: error,
       });
-      console.error("QA API Error:", err);
     }
   };
 
   const [testHelloWorld, setTestHelloWorld] = useState("NA");
   const [testKeywords, setTestKeywords] = useState(["NA"]);
 
-  const queryStringParams = {
-    role: "mom",
-    age: [12, 25],
+  const formatQueryString = (paramObject) => {
+    return Object.entries(paramObject)
+      .flatMap(([key, values]) =>
+        Array.isArray(values)
+          ? values.map(
+              (value) =>
+                `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+            )
+          : `${encodeURIComponent(key)}=${encodeURIComponent(values)}`
+      )
+      .join("&");
   };
-
-  //     keywords: ["sleep", "play", "feeding"],
-
-  const queryString = Object.entries(queryStringParams)
-    .flatMap(([key, values]) =>
-      Array.isArray(values)
-        ? values.map(
-            (value) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
-          )
-        : `${encodeURIComponent(key)}=${encodeURIComponent(values)}`
-    )
-    .join("&");
 
   return (
     <div className="m-5">
@@ -221,49 +246,6 @@ export default function App() {
         <h1>Welcome</h1>
       </header>
       <main>
-        <section>
-          <h2>Test API section</h2>
-          <div>
-            <button
-              onClick={async () => {
-                console.log("Testing hello-world API...");
-                try {
-                  // let res = await fetch("/api/hello-world");
-                  let res = await fetch(DEV_API + "api/hello-world");
-
-                  let jres = await res.json();
-                  console.log(jres.message);
-                  setTestHelloWorld(jres.message);
-                } catch (e) {
-                  console.log("Error: ", e);
-                }
-              }}
-            >
-              Test hello-world
-            </button>
-            <p>{testHelloWorld}</p>
-          </div>
-          <div>
-            <button
-              onClick={async () => {
-                console.log("Testing keywords API...");
-                try {
-                  let res = await fetch(
-                    `${DEV_API}/api/keywords?${queryString}`
-                  );
-                  let jres = await res.json();
-                  console.log(jres.message);
-                  setTestKeywords(jres.message.keywords);
-                } catch (e) {
-                  console.log("Error: ", e);
-                }
-              }}
-            >
-              Test keywords
-            </button>
-            <p>{testKeywords}</p>
-          </div>
-        </section>
         <section className="my-5">
           <h2>Choose your role to begin</h2>
           {ROLES.map((r, index) => {
@@ -287,7 +269,7 @@ export default function App() {
         <section>
           {selectedRole && toggleAgeGroup && (
             <AgeGroup
-              ageGroups={AG}
+              ageGroups={ageGroups}
               selectedAgeGroup={selectedAgeGroup}
               onAgeGroupClick={onAgeGroupClick}
             />
@@ -299,6 +281,7 @@ export default function App() {
             <Keywords
               role={selectedRole}
               selectedAgeGroup={selectedAgeGroup}
+              ageGroups={ageGroups}
               keywords={keywords}
               selectedKeywords={selectedKeywords}
               onKeywordClick={onKeywordClick}

@@ -13,7 +13,7 @@ export default function TopQAs({ qaList }) {
   );
 }
 
-const AccordionItem = ({ entry, index }) => {
+const AccordionItem = ({ key, entry, index }) => {
   let id = "#" + index;
   return (
     <div className="accordion-item">
@@ -26,7 +26,7 @@ const AccordionItem = ({ entry, index }) => {
           aria-expanded="false"
           aria-controls={index}
         >
-          {entry["qns"]}
+          {entry["question"]}
         </button>
       </h2>
       <div
@@ -34,7 +34,7 @@ const AccordionItem = ({ entry, index }) => {
         className="accordion-collapse collapse"
         data-bs-parent="#accordionExample"
       >
-        <div className="accordion-body">{entry["ans"]}</div>
+        <div className="accordion-body">{entry["answer"]}</div>
       </div>
     </div>
   );

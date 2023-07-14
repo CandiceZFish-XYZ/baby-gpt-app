@@ -96,11 +96,18 @@ API handler func
 Front-end to API
 
 - keywords API called successfully by button clicks with parameters sent
+- format received output for display
+- make query params coming from the buttons clicked
 
 TODO
 
-- format received output for display
-- make query params coming from the buttons clicked
+- refactor `App.tsx`, separate API functions & define types
+- get questions first, then get individual answer.
+  - get answer API
+  - rename QAs
+- multi-value keywords handle single value case
+- URL constructor, append parameters
+  - does it handle "1 yr - 3 yr" spaces?
 - ! Add `try-catch` block to API handlers! (now not logging errors)
 - ! Sync prettier & Eslint!
 - ! HIDE API keys in environment variable!

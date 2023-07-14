@@ -35,7 +35,7 @@ export class BabyGptApiStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_18_X,
       code: lambda.Code.fromAsset("../baby-gpt-api/dist"),
       handler: "get-keywords.handler",
-      timeout: cdk.Duration.seconds(10),
+      timeout: cdk.Duration.seconds(20),
     });
 
     const keywordsTodos = this.api.root.addResource("keywords");
@@ -50,7 +50,7 @@ export class BabyGptApiStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_18_X,
       code: lambda.Code.fromAsset("../baby-gpt-api/dist"),
       handler: "get-qas.handler",
-      timeout: cdk.Duration.seconds(15),
+      timeout: cdk.Duration.seconds(30),
     });
 
     const qasTodos = this.api.root.addResource("qas");
