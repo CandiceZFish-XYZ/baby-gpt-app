@@ -7,22 +7,21 @@ type KeywordsRequest = {
   age: string;
 };
 
-const DEV_API = "http://localhost:8081";
-
 export const getKeywords = async (
   request: KeywordsRequest
 ): Promise<KeywordsResponse> => {
-  const queryString = new URLSearchParams();
-  queryString.append("role", encodeURIComponent(request.role));
-  queryString.append("age", encodeURIComponent(request.age));
+  // TODO: Support both dev URL and real URL
+  const domain = process.env.DEV_API_URL ?? window.location.hostname;
+  const url = new URL(`${domain}/api/keywords`);
+  url.searchParams.append("role", encodeURIComponent(request.role));
+  url.searchParams.append("age", encodeURIComponent(request.age));
 
   try {
-    let response = await fetch(
-      `${DEV_API}/api/keywords?${queryString.toString()}`
-    );
-    let responseJson = await response.json();
+    let response = await fetch(url);
+    let responseJson = (await response.json()) as KeywordsResponse;
+    console.log("res: ", responseJson);
 
-    return responseJson as KeywordsResponse;
+    return responseJson;
   } catch (err) {
     console.log("Keywords API Error: ", err);
     throw err;

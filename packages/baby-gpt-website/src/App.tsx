@@ -6,6 +6,7 @@ import TopQuestions from "./components/TopQuestions";
 import { getQuestions } from "./api/get-questions";
 import { getKeywords } from "./api/get-keyword";
 
+// TODO: Move to constants
 const ROLES = [
   "Dad",
   "Mom",
@@ -58,6 +59,8 @@ export default function App() {
     loading: false,
     error: undefined,
   });
+
+  // TODO: Change to Set
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
 
   const [questions, setQuestions] = useState<ApiResult<string[]>>({
@@ -127,17 +130,17 @@ export default function App() {
         return;
       }
 
-      const kwords = await getKeywords({
-        role: selectedRole,
-        age: ageGroups[selectedAgeGroupIndex],
-      });
-      console.log("Returned from API: ", kwords);
-      setKeywords({
-        data: kwords,
-        loading: false,
-        error: undefined,
-      });
       try {
+        const kwords = await getKeywords({
+          role: selectedRole,
+          age: ageGroups[selectedAgeGroupIndex],
+        });
+        console.log("Returned from API: ", kwords);
+        setKeywords({
+          data: kwords,
+          loading: false,
+          error: undefined,
+        });
       } catch (err) {
         setKeywords({
           data: undefined,
@@ -150,13 +153,15 @@ export default function App() {
   }, [selectedAgeGroupIndex]);
 
   const onKeywordClick = (kword) => {
-    if (!selectedKeywords.includes(kword)) {
-      setSelectedKeywords((prev) => [...prev, kword]);
-      console.log("Selected keyword: ", kword);
-    } else {
-      setSelectedKeywords((prev) => prev.filter((word) => word !== kword));
-      console.log("Un-selected keyword: ", kword);
-    }
+    setSelectedKeywords((prev) => {
+      if (!prev.includes(kword)) {
+        console.log("Selected keyword: ", kword);
+        return [...prev, kword];
+      } else {
+        console.log("Un-selected keyword: ", kword);
+        return prev.filter((word) => word !== kword);
+      }
+    });
   };
 
   const onGetQuestions = async () => {

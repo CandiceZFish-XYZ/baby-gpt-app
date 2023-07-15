@@ -121,9 +121,16 @@ TODO
 - ename QAs
 - URL constructor, append parameters
 - handle "1 yr - 3 yr" spaces
+- get answer API
+
+Code Review
+
+- Dev API URL set as environment variable
+- use URL instead of URLSearchParams
+- conditional set state: put logic inside the set()
 
 TODO
 
 - get questions first, then get individual answer => Accordion
-  - get answer API
+- Call get answer API
 - multi-value keywords handle single value case

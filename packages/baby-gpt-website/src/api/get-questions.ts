@@ -11,11 +11,15 @@ type QuestionsRequest = {
   keywords: string[];
 };
 
-const DEV_API = "http://localhost:8081";
+// TODO: Change response type to object
+const r = {
+  questions: ["this is question 1", "q2", "q3"],
+};
 
 export const getQuestions = async (
   request: QuestionsRequest
 ): Promise<QuestionsResponse> => {
+  // TODO: Use URL
   const queryString = new URLSearchParams();
   queryString.append("role", request.role);
   queryString.append("age", encodeURIComponent(request.age));
@@ -24,14 +28,14 @@ export const getQuestions = async (
   });
 
   try {
-    let response = await fetch(
-      `${DEV_API}/api/questions?${queryString.toString()}`
+    const domain = process.env.DEV_API_URL ?? window.location.hostname;
+    const response = await fetch(
+      `${domain}/api/questions?${queryString.toString()}`
     );
-    let responseJson = await response.json();
-
+    const responseJson = (await response.json()) as QuestionsResponse;
     console.log("res: ", responseJson);
 
-    return responseJson as QuestionsResponse;
+    return responseJson;
   } catch (err) {
     console.log("Questions API Error: ", err);
     throw err;
