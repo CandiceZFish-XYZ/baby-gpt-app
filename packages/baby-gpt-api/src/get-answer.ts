@@ -41,15 +41,19 @@ export const handler = async (
     unit1 = "year";
   }
 
-  const keywords = event.multiValueQueryStringParameters?.["keywords"];
-  const keywordStr = keywords ? keywords.join(", ") : undefined;
+  const question = event.queryStringParameters?.question
+    ? decodeURIComponent(event.queryStringParameters.question)
+    : "";
 
   const prompt = `
-    List five top questions that is concerned by a ${role} 
-    during the childcare of ${age0} ${unit0} - ${age1} ${unit1} olds 
-    with these keywords ${keywordStr}.
-    Then provide a brief answer to each question in no more than 4 sentences.
-    Format your response in a json list, label the question aas 'question' and the answer as 'answer'.`;
+    As a caring ${role} for a ${age0} ${unit0} - ${age1} ${unit1} old child, 
+    please provide a brief answer to the following question in one paragraph. 
+    Format the response in JSON, label the answer as 'answer' and include the source as 'source'. 
+    You may refer to reputable expert resources, such as well-known organizations, professionals, childcare magazines, or websites. 
+    """
+    Question:
+    ${question}
+    """`;
   console.log("prompt", prompt);
 
   const response = await get_completion(prompt);

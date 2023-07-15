@@ -114,3 +114,16 @@ TODO
 - Center role & keywords section
 - keyword 换行
 - Responsive
+
+### 0714
+
+- refactor `App.tsx`, separate API functions & define types
+- ename QAs
+- URL constructor, append parameters
+- handle "1 yr - 3 yr" spaces
+
+TODO
+
+- get questions first, then get individual answer => Accordion
+  - get answer API
+- multi-value keywords handle single value case

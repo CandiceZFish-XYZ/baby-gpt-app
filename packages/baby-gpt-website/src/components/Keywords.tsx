@@ -2,18 +2,18 @@ import React from "react";
 
 export default function Keywords({
   role,
-  selectedAgeGroup,
+  selectedAgeGroupIndex,
   ageGroups,
   keywords,
   selectedKeywords,
   onKeywordClick,
-  fetchQAs,
+  onGetQuestions,
 }) {
   return (
     <section className="my-5">
       <p>
-        Pick top 3 keyword for consideration as a {role} for age{" "}
-        {ageGroups[selectedAgeGroup].label}
+        Pick the keyword that is most concerned as a caring {role} for a child
+        of age {ageGroups[selectedAgeGroupIndex]} old.
       </p>
       <div>
         {keywords.data.map((kword: string, index: number) => {
@@ -36,7 +36,7 @@ export default function Keywords({
         })}
       </div>
       {selectedKeywords.length > 0 && (
-        <button className="m-1 btn btn-info" onClick={fetchQAs}>
+        <button className="m-1 btn btn-info" onClick={onGetQuestions}>
           Continue
         </button>
       )}

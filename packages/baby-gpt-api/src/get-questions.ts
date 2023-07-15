@@ -15,7 +15,7 @@ async function get_completion(prompt, model = "gpt-3.5-turbo") {
         content: prompt,
       },
     ],
-    temperature: 0.7,
+    temperature: 0.5,
   });
   return response.data.choices[0].message?.content;
 }
@@ -41,15 +41,20 @@ export const handler = async (
     unit1 = "year";
   }
 
-  const prompt = `
-    Suggest five top keywords that is concerned by a ${role} 
-    during the childcare of ${age0} ${unit0} - ${age1} ${unit1} olds.
-    Format your response as a javascript array.`;
+  const keywords = event.multiValueQueryStringParameters?.["keywords"];
+  const keywordStr = keywords ? keywords.join(", ") : undefined;
 
-  console.log(prompt);
+  const prompt = `
+    List five top questions that is concerned by a ${role} 
+    during the childcare of ${age0} ${unit0} - ${age1} ${unit1} olds 
+    in these topics: ${keywordStr}.
+    Format your response as a javascript array.`;
+  console.log("prompt", prompt);
 
   const response = await get_completion(prompt);
-  let jsonRes;
+  console.log("response", response);
+
+  let jsonRes = prompt;
   if (typeof response === "string") {
     jsonRes = await JSON.parse(response);
   }

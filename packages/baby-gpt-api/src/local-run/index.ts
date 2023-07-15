@@ -2,7 +2,8 @@ import { APIGatewayProxyEvent } from "aws-lambda";
 
 import { handler as helloWorldHandler } from "../get-hello-world";
 import { handler as getKeywordHandler } from "../get-keywords";
-import { handler as getQasHandler } from "../get-qas";
+import { handler as getQuestionsHandler } from "../get-questions";
+import { handler as getAnswerHandler } from "../get-answer";
 
 // helloWorldHandler({} as APIGatewayProxyEvent)
 //   .then((response) => console.log(JSON.stringify(response)))
@@ -20,12 +21,11 @@ import { handler as getQasHandler } from "../get-qas";
 //   },
 // } as unknown as APIGatewayProxyEvent)
 //   .then((response) => JSON.parse(response.body))
-//   .then((res) => console.log(res))
 //   .catch((error) => console.error(error));
 
 // ========================
 
-getQasHandler({
+getQuestionsHandler({
   queryStringParameters: {
     role: "Grandpa",
   },
@@ -35,5 +35,18 @@ getQasHandler({
   },
 } as unknown as APIGatewayProxyEvent)
   .then((response) => JSON.parse(response.body))
-  .then((res) => console.log(res))
   .catch((error) => console.error(error));
+
+// ========================
+
+// getAnswerHandler({
+//   queryStringParameters: {
+//     role: "Grandpa",
+//     question: encodeURIComponent("How much should the child eat each day?"),
+//   },
+//   multiValueQueryStringParameters: {
+//     age: [12, 25],
+//   },
+// } as unknown as APIGatewayProxyEvent)
+//   .then((response) => JSON.parse(response.body))
+//   .catch((error) => console.error(error));

@@ -35,7 +35,7 @@ export class BabyGptApiStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_18_X,
       code: lambda.Code.fromAsset("../baby-gpt-api/dist"),
       handler: "get-keywords.handler",
-      timeout: cdk.Duration.seconds(20),
+      timeout: cdk.Duration.seconds(15),
     });
 
     const keywordsTodos = this.api.root.addResource("keywords");
@@ -44,16 +44,34 @@ export class BabyGptApiStack extends cdk.Stack {
       new apigateway.LambdaIntegration(keywordsLambda)
     );
 
-    //  QAs
+    //  Questions
 
-    const qasLambda = new lambda.Function(this, "QasFunc", {
+    const questionsLambda = new lambda.Function(this, "QuestionsFunc", {
       runtime: lambda.Runtime.NODEJS_18_X,
       code: lambda.Code.fromAsset("../baby-gpt-api/dist"),
-      handler: "get-qas.handler",
+      handler: "get-questions.handler",
       timeout: cdk.Duration.seconds(30),
     });
 
-    const qasTodos = this.api.root.addResource("qas");
-    qasTodos.addMethod("GET", new apigateway.LambdaIntegration(qasLambda));
+    const questionsTodos = this.api.root.addResource("questions");
+    questionsTodos.addMethod(
+      "GET",
+      new apigateway.LambdaIntegration(questionsLambda)
+    );
+
+    //  Answer
+
+    const answerLambda = new lambda.Function(this, "AnswerFunc", {
+      runtime: lambda.Runtime.NODEJS_18_X,
+      code: lambda.Code.fromAsset("../baby-gpt-api/dist"),
+      handler: "get-answer.handler",
+      timeout: cdk.Duration.seconds(15),
+    });
+
+    const answerTodos = this.api.root.addResource("answer");
+    answerTodos.addMethod(
+      "GET",
+      new apigateway.LambdaIntegration(answerLambda)
+    );
   }
 }

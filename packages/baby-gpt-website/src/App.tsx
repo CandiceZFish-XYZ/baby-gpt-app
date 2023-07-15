@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 
 import AgeGroup from "./components/AgeGroup";
 import Keywords from "./components/Keywords";
-import TopQAs from "./components/TopQAs";
-import { getQuestions } from "./api/get-qas";
-
-const DEV_API = "http://localhost:8081";
+import TopQuestions from "./components/TopQuestions";
+import { getQuestions } from "./api/get-questions";
+import { getKeywords } from "./api/get-keyword";
 
 const ROLES = [
   "Dad",
@@ -21,32 +20,15 @@ const ROLES = [
 ];
 // more:  "Great Grandma", "Great Grandpa", "Uncle", "Auntie"
 
-type AgeRange = {
-  id: number;
-  label: string;
-  fromAge: number;
-  toAge: number;
-};
-
-// const AG: string[] = [
-//   "newborn",
-//   "3 m - 1 yr",
-//   "1 yr - 3 yr",
-//   "3 yr - 5 yr",
-//   "5 yr - 12 yr",
-//   "12 yr - 14 yr",
-//   "14 yr - 16 yr",
-//   "16 yr - 18 yr",];
-
-const ageGroups: AgeRange[] = [
-  { id: 0, label: "newborn", fromAge: 0, toAge: 3 },
-  { id: 1, label: "3 m - 1 yr", fromAge: 3, toAge: 12 },
-  { id: 2, label: "1 yr - 3 yr", fromAge: 12, toAge: 36 },
-  { id: 3, label: "3 yr - 5 yr", fromAge: 36, toAge: 60 },
-  { id: 4, label: "5 yr - 12 yr", fromAge: 60, toAge: 144 },
-  { id: 5, label: "12 yr - 14 yr", fromAge: 144, toAge: 168 },
-  { id: 6, label: "14 yr - 16 yr", fromAge: 168, toAge: 192 },
-  { id: 7, label: "16 yr - 18 yr", fromAge: 192, toAge: 216 },
+const ageGroups: string[] = [
+  "newborn",
+  "3 m - 1 yr",
+  "1 yr - 3 yr",
+  "3 yr - 5 yr",
+  "5 yr - 12 yr",
+  "12 yr - 14 yr",
+  "14 yr - 16 yr",
+  "16 yr - 18 yr",
 ];
 
 // data & loading for next section!
@@ -64,9 +46,9 @@ export default function App() {
   const [toggleAgeGroup, setToggleAgeGroup] = useState<boolean | undefined>(
     undefined
   );
-  const [selectedAgeGroup, setSelectedAgeGroup] = useState<number | undefined>(
-    undefined
-  );
+  const [selectedAgeGroupIndex, setSelectedAgeGroupIndex] = useState<
+    number | undefined
+  >(undefined);
 
   const [toggleKeywords, setToggleKeywords] = useState<boolean | undefined>(
     undefined
@@ -78,7 +60,7 @@ export default function App() {
   });
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
 
-  const [qas, setQas] = useState<ApiResult<string[]>>({
+  const [questions, setQuestions] = useState<ApiResult<string[]>>({
     data: undefined,
     loading: false,
     error: undefined,
@@ -89,14 +71,14 @@ export default function App() {
       setSelectedRole(r);
       setToggleAgeGroup(true);
       // reset rest
-      setSelectedAgeGroup(undefined);
+      setSelectedAgeGroupIndex(undefined);
       setKeywords({
         data: undefined,
         loading: false,
         error: undefined,
       });
       setSelectedKeywords([]);
-      setQas({
+      setQuestions({
         data: undefined,
         loading: false,
         error: undefined,
@@ -113,8 +95,8 @@ export default function App() {
   };
 
   const onAgeGroupClick = (ag: number): void => {
-    if (!selectedAgeGroup || ag !== selectedAgeGroup) {
-      setSelectedAgeGroup(ag);
+    if (!selectedAgeGroupIndex || ag !== selectedAgeGroupIndex) {
+      setSelectedAgeGroupIndex(ag);
       setToggleKeywords(true);
       // reset rest
       setKeywords({
@@ -123,7 +105,7 @@ export default function App() {
         error: undefined,
       });
       setSelectedKeywords([]);
-      setQas({
+      setQuestions({
         data: undefined,
         loading: false,
         error: undefined,
@@ -139,44 +121,33 @@ export default function App() {
     }
   };
 
-  const fetchKeywords = async () => {
-    console.log("Calling keywords API...");
+  useEffect(() => {
+    const fetchKeywords = async () => {
+      if (selectedAgeGroupIndex === undefined) {
+        return;
+      }
 
-    const queryStringParams = {
-      role: selectedRole,
-      age: [
-        ageGroups[selectedAgeGroup].fromAge,
-        ageGroups[selectedAgeGroup].toAge,
-      ],
-    };
-    const queryString = formatQueryString(queryStringParams);
-    try {
-      let res = await fetch(`${DEV_API}/api/keywords?${queryString}`);
-      let jres = await res.json();
-      let jk = jres.message.keywords;
-      console.log(jk);
+      const kwords = await getKeywords({
+        role: selectedRole,
+        age: ageGroups[selectedAgeGroupIndex],
+      });
+      console.log("Returned from API: ", kwords);
       setKeywords({
-        data: jk,
+        data: kwords,
         loading: false,
         error: undefined,
       });
-    } catch (err) {
-      setKeywords({
-        data: undefined,
-        loading: false,
-        error: err,
-      });
-      console.log("Keywords API Error: ", err);
-    }
-  };
-
-  useEffect(() => {
-    if (selectedAgeGroup === undefined) {
-      return;
-    }
-
+      try {
+      } catch (err) {
+        setKeywords({
+          data: undefined,
+          loading: false,
+          error: err,
+        });
+      }
+    };
     fetchKeywords();
-  }, [selectedAgeGroup]);
+  }, [selectedAgeGroupIndex]);
 
   const onKeywordClick = (kword) => {
     if (!selectedKeywords.includes(kword)) {
@@ -188,56 +159,38 @@ export default function App() {
     }
   };
 
-  const fetchQAs = async () => {
-    console.log("Calling QA API...");
+  const onGetQuestions = async () => {
+    console.log("Calling Questions API...");
 
     //reset
-    setQas({
+    setQuestions({
       data: undefined,
       loading: true,
       error: undefined,
     });
 
     try {
-      const questions = await getQuestions({
+      const qns = await getQuestions({
         role: selectedRole,
-        age: [
-          ageGroups[selectedAgeGroup].fromAge,
-          ageGroups[selectedAgeGroup].toAge,
-        ],
+        age: ageGroups[selectedAgeGroupIndex],
         keywords: selectedKeywords,
       });
 
-      console.log(questions);
+      console.log("From API: ", qns);
+      console.log("QNS 0: ", qns[0]);
 
-      setQas({
-        data: questions,
+      setQuestions({
+        data: qns,
         loading: false,
         error: undefined,
       });
-    } catch (error) {
-      setQas({
+    } catch (err) {
+      setQuestions({
         data: undefined,
         loading: false,
-        error: error,
+        error: err,
       });
     }
-  };
-
-  const [testHelloWorld, setTestHelloWorld] = useState("NA");
-  const [testKeywords, setTestKeywords] = useState(["NA"]);
-
-  const formatQueryString = (paramObject) => {
-    return Object.entries(paramObject)
-      .flatMap(([key, values]) =>
-        Array.isArray(values)
-          ? values.map(
-              (value) =>
-                `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
-            )
-          : `${encodeURIComponent(key)}=${encodeURIComponent(values)}`
-      )
-      .join("&");
   };
 
   return (
@@ -270,29 +223,29 @@ export default function App() {
           {selectedRole && toggleAgeGroup && (
             <AgeGroup
               ageGroups={ageGroups}
-              selectedAgeGroup={selectedAgeGroup}
+              selectedAgeGroupIndex={selectedAgeGroupIndex}
               onAgeGroupClick={onAgeGroupClick}
             />
           )}
         </section>
         <section>
           {keywords.loading && <Loading section="keywords" />}
-          {selectedAgeGroup && toggleKeywords && keywords.data && (
+          {selectedAgeGroupIndex && toggleKeywords && keywords.data && (
             <Keywords
               role={selectedRole}
-              selectedAgeGroup={selectedAgeGroup}
+              selectedAgeGroupIndex={selectedAgeGroupIndex}
               ageGroups={ageGroups}
               keywords={keywords}
               selectedKeywords={selectedKeywords}
               onKeywordClick={onKeywordClick}
-              fetchQAs={fetchQAs}
+              onGetQuestions={onGetQuestions}
             />
           )}
         </section>
         <section>
-          {qas.loading && <Loading section="QAs" />}
-          {selectedKeywords.length > 0 && qas.data && (
-            <TopQAs qaList={qas.data} />
+          {questions.loading && <Loading section="Questions" />}
+          {selectedKeywords.length > 0 && questions.data && (
+            <TopQuestions questionList={questions.data} />
           )}
         </section>
       </main>

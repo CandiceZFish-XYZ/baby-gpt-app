@@ -2,7 +2,7 @@ import React from "react";
 
 export default function AgeGroup({
   ageGroups,
-  selectedAgeGroup,
+  selectedAgeGroupIndex,
   onAgeGroupClick,
 }) {
   return (
@@ -10,7 +10,7 @@ export default function AgeGroup({
       <p>Choose the age group of your child</p>
       <div>
         {ageGroups.map((ag, index: number) => {
-          const isSelectedAG = selectedAgeGroup === ag.id;
+          const isSelectedAG = selectedAgeGroupIndex === index;
           return (
             <label
               key={index}
@@ -20,10 +20,10 @@ export default function AgeGroup({
                   : "m-1 btn btn-outline-primary"
               }
               onClick={() => {
-                onAgeGroupClick(ag.id);
+                onAgeGroupClick(index);
               }}
             >
-              {ag.label}
+              {ag}
             </label>
           );
         })}

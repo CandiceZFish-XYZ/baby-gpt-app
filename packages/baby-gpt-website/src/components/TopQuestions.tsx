@@ -1,11 +1,11 @@
 import React from "react";
 
-export default function TopQAs({ qaList }) {
+export default function TopQuestions({ questionList }) {
   return (
     <section className="my-5">
       <h2>Top Q&A for selected keywords:</h2>
       <div className="accordion" id="accordionExample">
-        {qaList.map((entry, index) => (
+        {questionList.map((entry, index) => (
           <AccordionItem key={index} entry={entry} index={index} />
         ))}
       </div>
@@ -26,7 +26,7 @@ const AccordionItem = ({ key, entry, index }) => {
           aria-expanded="false"
           aria-controls={index}
         >
-          {entry["question"]}
+          {entry}
         </button>
       </h2>
       <div
@@ -34,7 +34,7 @@ const AccordionItem = ({ key, entry, index }) => {
         className="accordion-collapse collapse"
         data-bs-parent="#accordionExample"
       >
-        <div className="accordion-body">{entry["answer"]}</div>
+        <div className="accordion-body">Loading...</div>
       </div>
     </div>
   );
