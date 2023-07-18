@@ -10,13 +10,14 @@ export const getKeywords = async (
   url.searchParams.append("age", encodeURIComponent(request.age));
 
   try {
+    // console.log("Calling keywords API...");
     const response = await fetch(url);
     const responseJson = (await response.json()) as KeywordsResponse;
-    console.log("res: ", responseJson);
+    // console.log("res: ", responseJson);
 
     return responseJson;
   } catch (err) {
-    console.log("Keywords API Error: ", err);
+    // console.log("Fetch Keywords Error: ", err);
     throw err;
   }
 };

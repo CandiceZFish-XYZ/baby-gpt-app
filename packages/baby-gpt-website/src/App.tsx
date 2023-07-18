@@ -8,6 +8,7 @@ import Keywords from "./components/Keywords";
 import TopQuestions from "./components/TopQuestions";
 import { getQuestions } from "./api/get-questions";
 import { getKeywords } from "./api/get-keyword";
+import { getAnswer } from "./api/get-answer";
 
 export default function App() {
   const [selectedRole, setSelectedRole] = useState<string | undefined>(
@@ -40,6 +41,12 @@ export default function App() {
     error: undefined,
   });
 
+  const [answer, setAnswer] = useState<ApiResult<string[]>>({
+    data: undefined,
+    loading: false,
+    error: undefined,
+  });
+
   const onRoleClick = (r: string): void => {
     if (!selectedRole || r !== selectedRole) {
       setSelectedRole(r);
@@ -53,6 +60,11 @@ export default function App() {
       });
       setSelectedKeywords(undefined);
       setQuestions({
+        data: undefined,
+        loading: false,
+        error: undefined,
+      });
+      setAnswer({
         data: undefined,
         loading: false,
         error: undefined,
@@ -84,6 +96,11 @@ export default function App() {
         loading: false,
         error: undefined,
       });
+      setAnswer({
+        data: undefined,
+        loading: false,
+        error: undefined,
+      });
       return;
     }
 
@@ -106,9 +123,9 @@ export default function App() {
           role: selectedRole,
           age: Constants.AGE_GROUPS[selectedAgeGroupIndex],
         });
-        console.log("Returned from API: ", kwords);
+
         setKeywords({
-          data: kwords,
+          data: kwords.keywords,
           loading: false,
           error: undefined,
         });
@@ -141,9 +158,12 @@ export default function App() {
   };
 
   const onGetQuestions = async () => {
-    console.log("Calling Questions API...");
-
-    //reset
+    //reset => TODO make a reset function
+    setAnswer({
+      data: undefined,
+      loading: false,
+      error: undefined,
+    });
     setQuestions({
       data: undefined,
       loading: true,
@@ -157,16 +177,42 @@ export default function App() {
         keywords: selectedKeywords,
       });
 
-      console.log("From API: ", qns);
-      console.log("QNS 0: ", qns[0]);
-
       setQuestions({
-        data: qns,
+        data: qns.questions,
         loading: false,
         error: undefined,
       });
     } catch (err) {
       setQuestions({
+        data: undefined,
+        loading: false,
+        error: err,
+      });
+    }
+  };
+
+  const onGetAnswer = async (qns: string) => {
+    //reset
+    setAnswer({
+      data: undefined,
+      loading: true,
+      error: undefined,
+    });
+
+    try {
+      const ans = await getAnswer({
+        role: selectedRole,
+        age: Constants.AGE_GROUPS[selectedAgeGroupIndex],
+        question: qns,
+      });
+
+      setAnswer({
+        data: ans.answer,
+        loading: false,
+        error: undefined,
+      });
+    } catch (err) {
+      setAnswer({
         data: undefined,
         loading: false,
         error: err,
@@ -210,21 +256,27 @@ export default function App() {
         </section>
         <section>
           {keywords.loading && <Loading section="keywords" />}
-          {selectedAgeGroupIndex && toggleKeywords && keywords.data && (
-            <Keywords
-              role={selectedRole}
-              selectedAgeGroupIndex={selectedAgeGroupIndex}
-              keywords={keywords}
-              selectedKeywords={selectedKeywords}
-              onKeywordClick={onKeywordClick}
-              onGetQuestions={onGetQuestions}
-            />
-          )}
+          {selectedAgeGroupIndex !== undefined &&
+            toggleKeywords &&
+            keywords.data && (
+              <Keywords
+                role={selectedRole}
+                selectedAgeGroupIndex={selectedAgeGroupIndex}
+                keywords={keywords}
+                selectedKeywords={selectedKeywords}
+                onKeywordClick={onKeywordClick}
+                onGetQuestions={onGetQuestions}
+              />
+            )}
         </section>
         <section>
           {questions.loading && <Loading section="Questions" />}
           {selectedKeywords && questions.data && (
-            <TopQuestions questionList={questions.data} />
+            <TopQuestions
+              questionList={questions.data}
+              onGetAnswer={onGetAnswer}
+              answer={answer}
+            />
           )}
         </section>
       </main>

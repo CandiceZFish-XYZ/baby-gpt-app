@@ -20,9 +20,16 @@ export type QuestionsRequest = {
   keywords: string[];
 };
 
-export type Question = {
-  question: string;
-  answer: string;
+export type QuestionsResponse = {
+  questions: string[];
 };
 
-export type QuestionsResponse = Question[];
+export type AnswerRequest = {
+  role: string;
+  age: string;
+  question: string;
+};
+
+export type AnswerResponse = {
+  answer: string;
+};

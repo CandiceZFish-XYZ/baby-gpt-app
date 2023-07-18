@@ -168,3 +168,13 @@ TODO
 
 - API return Error handling
   - Deploy & test
+- Front-end accept API response in object
+  - getting answer
+- fix bug on clicking 'newborn'
+
+TODO
+
+- Front-End: make reset a function
+- Front-End calling API: role & Age as utility function
+- API: handle unexpected query string params?
+- Performance optimization: toggle accordion do not cal API.

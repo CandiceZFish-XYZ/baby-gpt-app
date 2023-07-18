@@ -9,8 +9,6 @@ export default function Keywords({
   onKeywordClick,
   onGetQuestions,
 }) {
-  console.log("Got keywords: ", keywords);
-  console.log("Age: ", AGE_GROUPS[selectedAgeGroupIndex]);
   return (
     <section className="my-5">
       <p>

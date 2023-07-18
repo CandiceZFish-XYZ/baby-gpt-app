@@ -1,7 +1,5 @@
 import { QuestionsRequest, QuestionsResponse } from "../types/types";
 
-// TODO: Change response type to object
-
 export const getQuestions = async (
   request: QuestionsRequest
 ): Promise<QuestionsResponse> => {
@@ -14,13 +12,14 @@ export const getQuestions = async (
   });
 
   try {
+    // console.log("Calling questions API...");
     const response = await fetch(url);
     const responseJson = (await response.json()) as QuestionsResponse;
-    console.log("res: ", responseJson);
+    // console.log("res: ", responseJson);
 
     return responseJson;
   } catch (err) {
-    console.log("Questions API Error: ", err);
+    // console.log("Fetch Questions Error: ", err);
     throw err;
   }
 };
