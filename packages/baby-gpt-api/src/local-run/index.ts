@@ -22,17 +22,17 @@ import { handler as getAnswerHandler } from "../get-answer";
 
 // ========================
 
-getQuestionsHandler({
-  queryStringParameters: {
-    role: "Grandpa",
-    age: "1 yr - 3 yr",
-  },
-  multiValueQueryStringParameters: {
-    keywords: ["potty", "nutrition", "playtime", "hygiene", "development"],
-  },
-} as unknown as APIGatewayProxyEvent)
-  .then((response) => JSON.parse(response.body))
-  .catch((error) => console.error(error));
+// getQuestionsHandler({
+//   queryStringParameters: {
+//     role: "Grandpa",
+//     age: "1 yr - 3 yr",
+//   },
+//   multiValueQueryStringParameters: {
+//     keywords: ["potty", "nutrition", "playtime", "hygiene", "development"],
+//   },
+// } as unknown as APIGatewayProxyEvent)
+//   .then((response) => JSON.parse(response.body))
+//   .catch((error) => console.error(error));
 
 // ========================
 

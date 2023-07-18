@@ -27,10 +27,7 @@ export const handler = async (
   const response = await get_completion(prompt, 0.3);
   console.log("RESPONSE: \n" + response);
 
-  let jsonRes = prompt;
-  if (typeof response === "string") {
-    jsonRes = await JSON.parse(response);
-  }
+  const jsonRes = await JSON.parse(response);
 
   return {
     statusCode: 200,

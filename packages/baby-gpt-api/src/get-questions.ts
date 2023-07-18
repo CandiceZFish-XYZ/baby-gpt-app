@@ -23,15 +23,13 @@ export const handler = async (
     in these topics: ${keywordStr}.
     Format your response as a json consisting of an array labeled as 'questions', 
     and put the question in the array without numbering.`;
+
   console.log("PROMPT: \n" + prompt);
 
   const response = await get_completion(prompt, 0.5);
   console.log("RESPONSE: \n" + response);
 
-  let jsonRes = prompt;
-  if (typeof response === "string") {
-    jsonRes = await JSON.parse(response);
-  }
+  const jsonRes = await JSON.parse(response);
 
   return {
     statusCode: 200,

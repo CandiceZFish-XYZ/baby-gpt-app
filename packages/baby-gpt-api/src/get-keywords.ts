@@ -10,7 +10,7 @@ export const handler = async (
   const age = event.queryStringParameters?.["age"];
 
   const prompt = `
-    Suggest five top keywords that is concerned by a caring ${role} 
+    Suggest five top keywords that is concerned by a caring ${role}
     during the childcare of age ${age}.
     Format your response as a json consisting of an array labeled as 'keywords'.`;
 
@@ -18,11 +18,8 @@ export const handler = async (
 
   const response = await get_completion(prompt, 0.7);
   console.log("RESPONSE: \n", response);
-  let jsonRes;
-  //Error handle
-  if (typeof response === "string") {
-    jsonRes = await JSON.parse(response);
-  }
+
+  const jsonRes = await JSON.parse(response);
 
   return {
     statusCode: 200,

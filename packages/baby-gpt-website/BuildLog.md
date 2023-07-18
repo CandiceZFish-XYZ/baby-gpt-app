@@ -163,3 +163,8 @@ DOING
 TODO
 
 - API handle unexpected query string params?
+
+### 0718
+
+- API return Error handling
+  - Deploy & test
