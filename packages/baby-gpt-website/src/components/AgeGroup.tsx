@@ -1,15 +1,12 @@
 import React from "react";
+import { AGE_GROUPS } from "../constants/Constants";
 
-export default function AgeGroup({
-  ageGroups,
-  selectedAgeGroupIndex,
-  onAgeGroupClick,
-}) {
+export default function AgeGroup({ selectedAgeGroupIndex, onAgeGroupClick }) {
   return (
     <section className="my-5">
       <p>Choose the age group of your child</p>
       <div>
-        {ageGroups.map((ag, index: number) => {
+        {AGE_GROUPS.map((ag, index: number) => {
           const isSelectedAG = selectedAgeGroupIndex === index;
           return (
             <label

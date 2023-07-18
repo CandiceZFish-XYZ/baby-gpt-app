@@ -7,7 +7,7 @@
     "start": "webpack serve --mode development --env DEV_API_URL=http://localhost:8081",
     "build": "webpack --mode production",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "api": "npm run build && node server.js"
+    "api": "node proxy/api-proxy.js"
   },
   "repository": {
     "type": "git",

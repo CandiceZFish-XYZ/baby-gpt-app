@@ -1,24 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { Configuration, OpenAIApi } from "openai";
-
-const configuration = new Configuration({
-  apiKey: "sk-",
-});
-const openai = new OpenAIApi(configuration);
-
-async function get_completion(prompt, model = "gpt-3.5-turbo") {
-  let response = await openai.createChatCompletion({
-    model: model,
-    messages: [
-      {
-        role: "user",
-        content: prompt,
-      },
-    ],
-    temperature: 0.3,
-  });
-  return response.data.choices[0].message?.content;
-}
+import { get_completion } from "./helper/helper";
 
 export const handler = async (
   event: APIGatewayProxyEvent
@@ -26,27 +7,14 @@ export const handler = async (
   console.log("EVENT: \n" + JSON.stringify(event, null, 2));
 
   const role = event.queryStringParameters?.["role"];
-  const age = event.multiValueQueryStringParameters?.["age"];
-  let age0 = Number(age?.[0]);
-  let unit0 = "month";
-  if (age0 >= 12) {
-    age0 = Math.floor(age0 / 12);
-    unit0 = "year";
-  }
-
-  let age1 = Number(age?.[1]);
-  let unit1 = "month";
-  if (age1 >= 12) {
-    age1 = Math.floor(age1 / 12);
-    unit1 = "year";
-  }
+  const age = event.queryStringParameters?.["age"];
 
   const question = event.queryStringParameters?.question
     ? decodeURIComponent(event.queryStringParameters.question)
     : "";
 
   const prompt = `
-    As a caring ${role} for a ${age0} ${unit0} - ${age1} ${unit1} old child, 
+    As a caring ${role} for a ${age} old child, 
     please provide a brief answer to the following question in one paragraph. 
     Format the response in JSON, label the answer as 'answer' and include the source as 'source'. 
     You may refer to reputable expert resources, such as well-known organizations, professionals, childcare magazines, or websites. 
@@ -54,10 +22,10 @@ export const handler = async (
     Question:
     ${question}
     """`;
-  console.log("prompt", prompt);
+  console.log("PROMPT: \n" + prompt);
 
-  const response = await get_completion(prompt);
-  console.log("response", response);
+  const response = await get_completion(prompt, 0.3);
+  console.log("RESPONSE: \n" + response);
 
   let jsonRes = prompt;
   if (typeof response === "string") {

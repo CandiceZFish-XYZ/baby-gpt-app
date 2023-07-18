@@ -1,43 +1,13 @@
 import React, { useState, useEffect } from "react";
 
+import * as Constants from "./constants/Constants";
+import { ApiResult } from "./types/types";
+
 import AgeGroup from "./components/AgeGroup";
 import Keywords from "./components/Keywords";
 import TopQuestions from "./components/TopQuestions";
 import { getQuestions } from "./api/get-questions";
 import { getKeywords } from "./api/get-keyword";
-
-// TODO: Move to constants
-const ROLES = [
-  "Dad",
-  "Mom",
-  "Grandma",
-  "Grandpa",
-  "Big sister",
-  "Big brother",
-  "Younger sister",
-  "Younger brother",
-  "Care-giver",
-  "Teacher (educational)",
-];
-// more:  "Great Grandma", "Great Grandpa", "Uncle", "Auntie"
-
-const ageGroups: string[] = [
-  "newborn",
-  "3 m - 1 yr",
-  "1 yr - 3 yr",
-  "3 yr - 5 yr",
-  "5 yr - 12 yr",
-  "12 yr - 14 yr",
-  "14 yr - 16 yr",
-  "16 yr - 18 yr",
-];
-
-// data & loading for next section!
-type ApiResult<T> = {
-  data: T | undefined;
-  loading: boolean;
-  error: Error | undefined;
-};
 
 export default function App() {
   const [selectedRole, setSelectedRole] = useState<string | undefined>(
@@ -60,8 +30,9 @@ export default function App() {
     error: undefined,
   });
 
-  // TODO: Change to Set
-  const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
+  const [selectedKeywords, setSelectedKeywords] = useState<
+    Set<string> | undefined
+  >([]);
 
   const [questions, setQuestions] = useState<ApiResult<string[]>>({
     data: undefined,
@@ -80,7 +51,7 @@ export default function App() {
         loading: false,
         error: undefined,
       });
-      setSelectedKeywords([]);
+      setSelectedKeywords(undefined);
       setQuestions({
         data: undefined,
         loading: false,
@@ -107,7 +78,7 @@ export default function App() {
         loading: true,
         error: undefined,
       });
-      setSelectedKeywords([]);
+      setSelectedKeywords(undefined);
       setQuestions({
         data: undefined,
         loading: false,
@@ -133,7 +104,7 @@ export default function App() {
       try {
         const kwords = await getKeywords({
           role: selectedRole,
-          age: ageGroups[selectedAgeGroupIndex],
+          age: Constants.AGE_GROUPS[selectedAgeGroupIndex],
         });
         console.log("Returned from API: ", kwords);
         setKeywords({
@@ -154,13 +125,18 @@ export default function App() {
 
   const onKeywordClick = (kword) => {
     setSelectedKeywords((prev) => {
-      if (!prev.includes(kword)) {
-        console.log("Selected keyword: ", kword);
-        return [...prev, kword];
-      } else {
-        console.log("Un-selected keyword: ", kword);
-        return prev.filter((word) => word !== kword);
+      if (prev === undefined) {
+        return new Set([kword]);
       }
+
+      const curr = new Set(prev);
+      if (prev.has(kword)) {
+        curr.delete(kword);
+      } else {
+        curr.add(kword);
+      }
+
+      return curr;
     });
   };
 
@@ -177,7 +153,7 @@ export default function App() {
     try {
       const qns = await getQuestions({
         role: selectedRole,
-        age: ageGroups[selectedAgeGroupIndex],
+        age: Constants.AGE_GROUPS[selectedAgeGroupIndex],
         keywords: selectedKeywords,
       });
 
@@ -206,7 +182,7 @@ export default function App() {
       <main>
         <section className="my-5">
           <h2>Choose your role to begin</h2>
-          {ROLES.map((r, index) => {
+          {Constants.ROLES.map((r, index) => {
             const isSelectedRole = selectedRole === r;
             return (
               <button
@@ -227,7 +203,6 @@ export default function App() {
         <section>
           {selectedRole && toggleAgeGroup && (
             <AgeGroup
-              ageGroups={ageGroups}
               selectedAgeGroupIndex={selectedAgeGroupIndex}
               onAgeGroupClick={onAgeGroupClick}
             />
@@ -239,7 +214,6 @@ export default function App() {
             <Keywords
               role={selectedRole}
               selectedAgeGroupIndex={selectedAgeGroupIndex}
-              ageGroups={ageGroups}
               keywords={keywords}
               selectedKeywords={selectedKeywords}
               onKeywordClick={onKeywordClick}
@@ -249,7 +223,7 @@ export default function App() {
         </section>
         <section>
           {questions.loading && <Loading section="Questions" />}
-          {selectedKeywords.length > 0 && questions.data && (
+          {selectedKeywords && questions.data && (
             <TopQuestions questionList={questions.data} />
           )}
         </section>

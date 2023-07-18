@@ -1,24 +1,17 @@
-type KeywordsResponse = {
-  keywords: string[];
-};
-
-type KeywordsRequest = {
-  role: string;
-  age: string;
-};
+import { KeywordsRequest, KeywordsResponse } from "../types/types";
 
 export const getKeywords = async (
   request: KeywordsRequest
 ): Promise<KeywordsResponse> => {
-  // TODO: Support both dev URL and real URL
+  //TODO: role & Age as utility function
   const domain = process.env.DEV_API_URL ?? window.location.hostname;
   const url = new URL(`${domain}/api/keywords`);
   url.searchParams.append("role", encodeURIComponent(request.role));
   url.searchParams.append("age", encodeURIComponent(request.age));
 
   try {
-    let response = await fetch(url);
-    let responseJson = (await response.json()) as KeywordsResponse;
+    const response = await fetch(url);
+    const responseJson = (await response.json()) as KeywordsResponse;
     console.log("res: ", responseJson);
 
     return responseJson;

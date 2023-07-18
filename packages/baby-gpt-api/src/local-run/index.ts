@@ -14,10 +14,7 @@ import { handler as getAnswerHandler } from "../get-answer";
 // getKeywordHandler({
 //   queryStringParameters: {
 //     role: "Uncle",
-//     age: [3, 6],
-//   },
-//   multiValueQueryStringParameters: {
-//     age: [12, 25],
+//     age: "3 m - 1 yr",
 //   },
 // } as unknown as APIGatewayProxyEvent)
 //   .then((response) => JSON.parse(response.body))
@@ -28,10 +25,10 @@ import { handler as getAnswerHandler } from "../get-answer";
 getQuestionsHandler({
   queryStringParameters: {
     role: "Grandpa",
+    age: "1 yr - 3 yr",
   },
   multiValueQueryStringParameters: {
-    age: [12, 25],
-    keywords: ["safety", "nutrition", "playtime", "hygiene", "development"],
+    keywords: ["potty", "nutrition", "playtime", "hygiene", "development"],
   },
 } as unknown as APIGatewayProxyEvent)
   .then((response) => JSON.parse(response.body))
@@ -42,10 +39,8 @@ getQuestionsHandler({
 // getAnswerHandler({
 //   queryStringParameters: {
 //     role: "Grandpa",
+//     age: "3 m - 1 yr",
 //     question: encodeURIComponent("How much should the child eat each day?"),
-//   },
-//   multiValueQueryStringParameters: {
-//     age: [12, 25],
 //   },
 // } as unknown as APIGatewayProxyEvent)
 //   .then((response) => JSON.parse(response.body))

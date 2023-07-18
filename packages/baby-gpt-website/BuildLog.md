@@ -134,3 +134,32 @@ TODO
 - get questions first, then get individual answer => Accordion
 - Call get answer API
 - multi-value keywords handle single value case
+- Improve API prompt for better result
+- Move to constants, types file;
+- API return object instead of array type;
+- Change keywords to use set;
+
+### 0717
+
+- move constants to separate file
+- move types to separate file
+  - Moved get-keyword Request & Response type
+- Support both dev URL and real URL
+- Use const whenever possible
+- change selectedKeywords from array to set
+- API
+  - openai configuration separate to helper functon
+  - response in object type
+  - Age group: string
+  - keywords: support both single or multi-value
+
+DOING
+
+- API return Error handling
+  - Deploy & test
+- Front-End accept API response in object
+  - test & Deploy
+
+TODO
+
+- API handle unexpected query string params?
