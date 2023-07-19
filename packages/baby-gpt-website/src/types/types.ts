@@ -33,3 +33,17 @@ export type AnswerRequest = {
 export type AnswerResponse = {
   answer: string;
 };
+
+export interface AccordionItemProps {
+  key: number;
+  index: number;
+  role: string;
+  age: string;
+  question: string;
+}
+
+export interface TopQuestionsProps {
+  questions: string[];
+  role: string;
+  age: string;
+}

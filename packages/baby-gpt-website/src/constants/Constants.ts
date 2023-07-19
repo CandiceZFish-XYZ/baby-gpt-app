@@ -1,18 +1,14 @@
 export const ROLES: string[] = [
   "Dad",
   "Mom",
-  "Grandma",
-  "Grandpa",
-  "Big sister",
-  "Big brother",
-  "Younger sister",
-  "Younger brother",
-  "Great Grandma",
-  "Great Grandpa",
+  "Older Sibling",
+  "Younger Sibling",
+  "Grandparent",
   "Uncle",
-  "Auntie",
-  "Caregiver",
+  "Aunt",
   "Teacher",
+  "Nanny/Babysitter",
+  "Family Friend",
 ];
 
 export const AGE_GROUPS: string[] = [
@@ -25,3 +21,6 @@ export const AGE_GROUPS: string[] = [
   "14 yr - 16 yr",
   "16 yr - 18 yr",
 ];
+
+export const DOMAIN =
+  process.env.DEV_API_URL ?? `https://${window.location.hostname}`;

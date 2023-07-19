@@ -174,7 +174,28 @@ TODO
 
 TODO
 
+- UI:
+  - Center display
+  - keywords auto next line
 - Front-End: make reset a function
 - Front-End calling API: role & Age as utility function
 - API: handle unexpected query string params?
 - Performance optimization: toggle accordion do not cal API.
+
+### 0719
+
+- optimization: toggle accordion do not cal API -> Accordion Item handle own answer state!
+- Improve loading state
+- UI
+  - Center display
+  - keywords auto next line
+  - Simple Responsive
+
+TODO
+
+- fix 'key' bug
+- UI:
+  - Auto-scroll/focus to new section
+- Front-End: make reset a function
+- Front-End calling API: role & Age as utility function
+- API: handle unexpected query string params?

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 
-import * as Constants from "./constants/Constants";
 import { ApiResult } from "./types/types";
 
 import AgeGroup from "./components/AgeGroup";
 import Keywords from "./components/Keywords";
-import TopQuestions from "./components/TopQuestions";
-import { getQuestions } from "./api/get-questions";
+import QuestionAccordion from "./components/QuestionAccordion";
 import { getKeywords } from "./api/get-keyword";
-import { getAnswer } from "./api/get-answer";
+import { getQuestions } from "./api/get-questions";
+import { AGE_GROUPS, ROLES } from "./constants/constants";
+import Loading from "./components/Loading";
 
 export default function App() {
   const [selectedRole, setSelectedRole] = useState<string | undefined>(
@@ -41,12 +41,6 @@ export default function App() {
     error: undefined,
   });
 
-  const [answer, setAnswer] = useState<ApiResult<string[]>>({
-    data: undefined,
-    loading: false,
-    error: undefined,
-  });
-
   const onRoleClick = (r: string): void => {
     if (!selectedRole || r !== selectedRole) {
       setSelectedRole(r);
@@ -60,11 +54,6 @@ export default function App() {
       });
       setSelectedKeywords(undefined);
       setQuestions({
-        data: undefined,
-        loading: false,
-        error: undefined,
-      });
-      setAnswer({
         data: undefined,
         loading: false,
         error: undefined,
@@ -96,11 +85,6 @@ export default function App() {
         loading: false,
         error: undefined,
       });
-      setAnswer({
-        data: undefined,
-        loading: false,
-        error: undefined,
-      });
       return;
     }
 
@@ -121,7 +105,7 @@ export default function App() {
       try {
         const kwords = await getKeywords({
           role: selectedRole,
-          age: Constants.AGE_GROUPS[selectedAgeGroupIndex],
+          age: AGE_GROUPS[selectedAgeGroupIndex],
         });
 
         setKeywords({
@@ -159,11 +143,6 @@ export default function App() {
 
   const onGetQuestions = async () => {
     //reset => TODO make a reset function
-    setAnswer({
-      data: undefined,
-      loading: false,
-      error: undefined,
-    });
     setQuestions({
       data: undefined,
       loading: true,
@@ -173,7 +152,7 @@ export default function App() {
     try {
       const qns = await getQuestions({
         role: selectedRole,
-        age: Constants.AGE_GROUPS[selectedAgeGroupIndex],
+        age: AGE_GROUPS[selectedAgeGroupIndex],
         keywords: selectedKeywords,
       });
 
@@ -191,61 +170,38 @@ export default function App() {
     }
   };
 
-  const onGetAnswer = async (qns: string) => {
-    //reset
-    setAnswer({
-      data: undefined,
-      loading: true,
-      error: undefined,
-    });
-
-    try {
-      const ans = await getAnswer({
-        role: selectedRole,
-        age: Constants.AGE_GROUPS[selectedAgeGroupIndex],
-        question: qns,
-      });
-
-      setAnswer({
-        data: ans.answer,
-        loading: false,
-        error: undefined,
-      });
-    } catch (err) {
-      setAnswer({
-        data: undefined,
-        loading: false,
-        error: err,
-      });
-    }
-  };
-
   return (
-    <div className="m-5">
-      <header>
-        <h1>Welcome</h1>
+    <div className="container my-5 col-lg-8 text-center">
+      <header className="">
+        <h1>Welcome to BabyGPT</h1>
+        <h4>Baby FAQs powered by OpenAI GPT</h4>
       </header>
-      <main>
-        <section className="my-5">
+      <main className="my-5">
+        <section>
           <h2>Choose your role to begin</h2>
-          {Constants.ROLES.map((r, index) => {
-            const isSelectedRole = selectedRole === r;
-            return (
-              <button
-                key={index}
-                className={
-                  isSelectedRole
-                    ? "m-1 btn btn-primary"
-                    : "m-1 btn btn-outline-primary"
-                }
-                type="button"
-                onClick={() => onRoleClick(r)}
-              >
-                {r}
-              </button>
-            );
-          })}
+          <div className="container col-lg-8">
+            <div className=" d-flex flex-wrap justify-content-center">
+              {ROLES.map((r, index) => {
+                const isSelectedRole = selectedRole === r;
+                return (
+                  <button
+                    key={index}
+                    className={
+                      isSelectedRole
+                        ? "m-2 btn btn-primary"
+                        : "m-2 btn btn-outline-primary "
+                    }
+                    type="button"
+                    onClick={() => onRoleClick(r)}
+                  >
+                    {r}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </section>
+
         <section>
           {selectedRole && toggleAgeGroup && (
             <AgeGroup
@@ -270,12 +226,12 @@ export default function App() {
             )}
         </section>
         <section>
-          {questions.loading && <Loading section="Questions" />}
+          {questions.loading && <Loading />}
           {selectedKeywords && questions.data && (
-            <TopQuestions
-              questionList={questions.data}
-              onGetAnswer={onGetAnswer}
-              answer={answer}
+            <QuestionAccordion
+              questions={questions.data}
+              role={selectedRole}
+              age={AGE_GROUPS[selectedAgeGroupIndex]}
             />
           )}
         </section>
@@ -283,7 +239,3 @@ export default function App() {
     </div>
   );
 }
-
-const Loading = ({ section }) => {
-  return <p>Loading for seciton {section}...(takes 1-4 s)</p>;
-};

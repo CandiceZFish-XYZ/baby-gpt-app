@@ -1,5 +1,5 @@
 import React from "react";
-import { AGE_GROUPS } from "../constants/Constants";
+import { AGE_GROUPS } from "../constants/constants";
 
 export default function Keywords({
   role,
