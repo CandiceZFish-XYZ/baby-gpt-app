@@ -64,7 +64,7 @@ export default function AccordionItem(props: AccordionItemProps) {
         className="accordion-collapse collapse"
         data-bs-parent="#accordionExample"
       >
-        <div className="accordion-body">
+        <div className="accordion-body text-start">
           {answer.loading && <Loading />}
           {answer.data && <p>{answer.data}</p>}
         </div>

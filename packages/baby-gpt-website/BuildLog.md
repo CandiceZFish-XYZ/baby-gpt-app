@@ -190,12 +190,14 @@ TODO
   - Center display
   - keywords auto next line
   - Simple Responsive
+  - Accordion Answer align left
+  - Auto-scroll/focus to bottom
+  - dev mode & prod mode computes css differently, prod mode does not span whole screen height.
 
 TODO
 
 - fix 'key' bug
-- UI:
-  - Auto-scroll/focus to new section
+
 - Front-End: make reset a function
 - Front-End calling API: role & Age as utility function
 - API: handle unexpected query string params?

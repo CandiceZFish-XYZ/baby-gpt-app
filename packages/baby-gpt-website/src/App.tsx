@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { ApiResult } from "./types/types";
 
@@ -11,6 +11,7 @@ import { AGE_GROUPS, ROLES } from "./constants/constants";
 import Loading from "./components/Loading";
 
 export default function App() {
+  const bottomRef = useRef(null);
   const [selectedRole, setSelectedRole] = useState<string | undefined>(
     undefined
   );
@@ -58,6 +59,8 @@ export default function App() {
         loading: false,
         error: undefined,
       });
+
+      scrollToBottom();
       return;
     }
 
@@ -113,6 +116,8 @@ export default function App() {
           loading: false,
           error: undefined,
         });
+
+        scrollToBottom();
       } catch (err) {
         setKeywords({
           data: undefined,
@@ -161,6 +166,8 @@ export default function App() {
         loading: false,
         error: undefined,
       });
+
+      scrollToBottom();
     } catch (err) {
       setQuestions({
         data: undefined,
@@ -168,6 +175,12 @@ export default function App() {
         error: err,
       });
     }
+  };
+
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }, 100);
   };
 
   return (
@@ -236,6 +249,7 @@ export default function App() {
           )}
         </section>
       </main>
+      <div ref={bottomRef}></div>
     </div>
   );
 }
