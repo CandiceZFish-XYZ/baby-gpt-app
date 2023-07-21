@@ -37,11 +37,17 @@ export default function Keywords({
           );
         })}
       </div>
-      {selectedKeywords && (
-        <button className="m-1 btn btn-info" onClick={onGetQuestions}>
-          Continue
-        </button>
-      )}
+
+      <button
+        className={
+          selectedKeywords
+            ? "m-1 btn btn-info visible"
+            : "m-1 btn btn-info invisible"
+        }
+        onClick={onGetQuestions}
+      >
+        Continue
+      </button>
     </section>
   );
 }

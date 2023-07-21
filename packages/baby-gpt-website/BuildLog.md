@@ -201,3 +201,8 @@ TODO
 - Front-End: make reset a function
 - Front-End calling API: role & Age as utility function
 - API: handle unexpected query string params?
+
+### 0721
+
+- Add scroll to bottom when loading!
+- keywords section 'continue' button set invisible for placeholder

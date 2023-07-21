@@ -22,6 +22,8 @@ export default function AccordionItem(props: AccordionItemProps) {
       error: undefined,
     });
 
+    props.scrollToBottom();
+
     try {
       const ans = await getAnswer({
         role: props.role,
@@ -34,6 +36,7 @@ export default function AccordionItem(props: AccordionItemProps) {
         loading: false,
         error: undefined,
       });
+      props.scrollToBottom();
     } catch (err) {
       setAnswer({
         data: undefined,

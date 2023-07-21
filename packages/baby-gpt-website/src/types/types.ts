@@ -34,16 +34,18 @@ export type AnswerResponse = {
   answer: string;
 };
 
+export interface QuestionAccordionProps {
+  questions: string[];
+  role: string;
+  age: string;
+  scrollToBottom: Function;
+}
+
 export interface AccordionItemProps {
   key: number;
   index: number;
   role: string;
   age: string;
   question: string;
-}
-
-export interface TopQuestionsProps {
-  questions: string[];
-  role: string;
-  age: string;
+  scrollToBottom: Function;
 }

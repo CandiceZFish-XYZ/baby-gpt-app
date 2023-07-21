@@ -82,6 +82,7 @@ export default function App() {
         loading: true,
         error: undefined,
       });
+      scrollToBottom();
       setSelectedKeywords(undefined);
       setQuestions({
         data: undefined,
@@ -153,6 +154,7 @@ export default function App() {
       loading: true,
       error: undefined,
     });
+    scrollToBottom();
 
     try {
       const qns = await getQuestions({
@@ -245,6 +247,7 @@ export default function App() {
               questions={questions.data}
               role={selectedRole}
               age={AGE_GROUPS[selectedAgeGroupIndex]}
+              scrollToBottom={scrollToBottom}
             />
           )}
         </section>
