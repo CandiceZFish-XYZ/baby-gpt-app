@@ -1,4 +1,4 @@
-# [BabyGPT](https://babygpt.xzhou.dev) Childcare FAQs
+# [BabyGPT](https://babygpt.xzhou.dev) - Childcare FAQs App
 
 ## Introduction
 
