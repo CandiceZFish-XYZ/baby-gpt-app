@@ -1,8 +1,8 @@
-# BabyGPT Childcare FAQs
+# [BabyGPT](https://babygpt.xzhou.dev) Childcare FAQs
 
 ## Introduction
 
-Welcome to BabyGPT - Your Ultimate AI-Powered Childcare FAQs App! This cutting-edge application is dedicated to providing intelligent and personalized references to frequently asked childcare questions. Powered by the state-of-the-art OpenAI GPT-3.5 language model, BabyGPT offers an exceptional user experience with its groundbreaking features.
+Welcome to [BabyGPT](https://babygpt.xzhou.dev) - Your Ultimate AI-Powered Childcare FAQs App! This cutting-edge application is dedicated to providing intelligent and personalized references to frequently asked childcare questions. Powered by the state-of-the-art OpenAI GPT-3.5 language model, BabyGPT offers an exceptional user experience with its groundbreaking features.
 
 ## Features
 
