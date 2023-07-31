@@ -23,6 +23,7 @@
   "dependencies": {
     "@types/aws-lambda": "^8.10.119",
     "aws-lambda": "^1.0.7",
+    "bootstrap-icons": "^1.10.5",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "react": "^18.2.0",

@@ -187,6 +187,9 @@ export default function App() {
 
   return (
     <div className="container my-5 col-lg-8 text-center">
+      <div>
+        <i className="bi bi-github"></i>
+      </div>
       <header className="">
         <h1>Welcome to BabyGPT</h1>
         <h4>Baby FAQs powered by OpenAI GPT</h4>

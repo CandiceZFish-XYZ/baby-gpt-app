@@ -10,7 +10,9 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy-website": "npm run build --workspace baby-gpt-website && npm run cdk deploy BabyGptWebsiteStack"
+    "cdk": "cdk",
+    "dev": "cd packages/baby-gpt-website && npm start",
+    "deploy": "npm run build --workspace baby-gpt-website && cd packages/baby-gpt-cdk && npm run cdk deploy BabyGptWebsiteStack"
   },
   "author": "",
   "license": "MIT",
